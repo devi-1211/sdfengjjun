@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>峰峻命盘 · 用你的生日和 MBTI 遇见时代少年</title>
-<meta name="description" content="仅为娱乐 · 用生日 + MBTI 查你的本命哥哥 Top3、天生缘分、前世关系、TF 气质档案" />
+<title>峰峻命盘 · 用生日和 MBTI，找到你的本命成员</title>
+<meta name="description" content="仅为娱乐 · 用生日 + MBTI 查你的本命 Top3、天生缘分、前世关系、气质档案" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet" />
@@ -153,6 +153,12 @@
     border: 2px solid var(--accent);
   }
   .hero h1 { font-size: clamp(44px, 7vw, 86px); line-height: 1.02; }
+  /* 简洁版：不用大标语，只留品牌名 */
+  .hero-title-simple {
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+  }
   .hero h1 em { font-style: normal; color: var(--accent); position: relative; }
   .hero h1 em::after {
     content: ""; position: absolute;
@@ -241,6 +247,87 @@
     transition: box-shadow .15s ease;
   }
   .field:focus { outline: none; box-shadow: 0 0 0 4px var(--accent-soft); }
+  /* 意象原型块 */
+  .arch-block {
+    display: flex; gap: 18px; align-items: flex-start;
+    background: var(--accent-soft);
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: 6px 6px 0 var(--border);
+    margin-bottom: 24px;
+  }
+  .arch-icon { font-size: 44px; line-height: 1; }
+  .arch-body { flex: 1; }
+  .arch-name {
+    font-family: var(--font-display);
+    font-size: 30px; font-weight: 900;
+    color: var(--fg); line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .arch-desc {
+    margin: 0; font-size: 15px; line-height: 1.7;
+    color: var(--muted); font-weight: 600;
+  }
+  .profile-cell .pc-text {
+    font-size: 14.5px; line-height: 1.7;
+    color: var(--fg); font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* era filter */
+  .era-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
+  .era-btn {
+    padding: 10px 0;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-weight: 800; font-size: 13px;
+    color: var(--fg);
+    cursor: pointer;
+    transition: all .12s ease;
+  }
+  .era-btn:hover { background: var(--accent-soft); }
+  .era-btn.active { background: var(--secondary); color: #fff; border-color: var(--border); }
+  .era-all-btn {
+    width: 100%; padding: 8px;
+    background: transparent;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    font-weight: 700; font-size: 12px;
+    color: var(--muted); cursor: pointer;
+  }
+  .era-all-btn:hover { background: var(--fg-soft); }
+
+  /* 结果页匹配池提示 */
+  .pool-note {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-top: 10px;
+    opacity: 0.75;
+  }
+  /* 免责小字 */
+  .disclaimer-mini {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.7;
+    margin-top: 8px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  select.field {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231f1a2b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
   .birth-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
   .form-group { margin-bottom: 20px; }
   .mbti-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
@@ -353,7 +440,184 @@
   }
   .r-body p + p { margin-top: 14px; }
 
-  /* top3 */
+  /* love Top3 cards (detailed) */
+  .love-grid {
+    display: grid; grid-template-columns: 1fr; gap: 20px;
+    margin-top: 24px;
+  }
+  .love-card {
+    background: #fff;
+    border: var(--border-w) solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 6px 6px 0 var(--border);
+    position: relative;
+  }
+  .love-card.love-rank1 { background: var(--accent-soft); }
+  .love-card.love-rank1::before {
+    content: "👑"; position: absolute;
+    top: -18px; left: 20px; font-size: 28px;
+  }
+  .love-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .love-head .top-rank {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--fg); color: #fff;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .love-card.love-rank1 .top-rank { background: var(--accent); }
+  .love-score {
+    font-family: var(--font-display);
+    font-size: 32px; font-weight: 900;
+    color: var(--accent); line-height: 1;
+  }
+  .love-score .unit { font-size: 14px; color: var(--muted); margin-left: 2px; }
+  .love-name {
+    font-family: var(--font-display);
+    font-size: 28px; font-weight: 900;
+    color: var(--fg); margin-bottom: 4px; line-height: 1.1;
+  }
+  .love-meta {
+    font-size: 13px; color: var(--muted); font-weight: 700;
+    margin-bottom: 20px;
+    font-family: var(--font-mono); letter-spacing: 0.03em;
+  }
+  .love-section {
+    background: #fff8f3;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .love-card.love-rank1 .love-section { background: #fff; }
+  .love-section-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    border: 1.5px solid var(--accent);
+  }
+  .love-section p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .love-date {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px; padding: 12px 16px;
+    background: var(--warning);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 3px 3px 0 var(--border);
+    flex-wrap: wrap;
+  }
+  .love-date-tag {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+  }
+  .love-date-place {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 900;
+    color: var(--fg);
+  }
+
+  /* past · 三层文案 */
+  .past-title {
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1.35;
+    margin: 24px 0 20px;
+  }
+  .past-trace {
+    background: #f0e9ff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 20px;
+    box-shadow: 3px 3px 0 var(--border);
+  }
+  .past-trace p {
+    margin: 8px 0 0;
+    font-size: 14px; line-height: 1.7;
+    color: var(--fg); font-weight: 600;
+  }
+  .past-last {
+    margin-top: 14px;
+    padding: 18px 20px;
+    background: var(--warning);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 3px 3px 0 var(--border);
+    text-align: center;
+  }
+  .past-last-tag {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    margin-bottom: 8px;
+  }
+  .past-last-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.5;
+  }
+
+  /* past detail */
+  .past-detail {
+    background: #f0e9ff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 20px;
+    box-shadow: 3px 3px 0 var(--border);
+  }
+  .past-detail-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--secondary);
+    background: #fff;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    border: 1.5px solid var(--secondary);
+  }
+  .past-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .past-pill {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 700;
+    color: var(--fg);
+  }
+
+  /* top3 (本命) */
   .top3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px; }
   @media (max-width: 700px) { .top3-grid { grid-template-columns: 1fr; } }
   .top-item {
@@ -492,6 +756,25 @@
   }
   .pagefoot .foot-links { display: flex; gap: 16px; }
   .fun-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 16px; font-weight: 600; }
+  .disclaimer-box {
+    margin-top: 24px;
+    background: #fff;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+  .disclaimer-box b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 14px; font-weight: 900;
+    color: var(--fg); margin-bottom: 6px;
+  }
+  .disclaimer-box p {
+    margin: 0; font-size: 12.5px; line-height: 1.65;
+    color: var(--muted); font-weight: 600;
+  }
 
   /* back nav */
   .back-nav {
@@ -531,7 +814,7 @@
       <span class="mark">峰</span>
       <span>峰峻命盘</span>
     </button>
-    <span class="pill"><span class="dot"></span>36 位已就位</span>
+    <span class="pill"><span class="dot"></span>一代至四代</span>
   </header>
 
   <section class="section hero">
@@ -542,8 +825,8 @@
 
     <div class="container hero-center">
       <p class="eyebrow">生日 + MBTI · 15 秒出结果</p>
-      <h1>和哥哥的缘分，<br/>原来<em>这样算</em>出来</h1>
-      <p class="lead">用你的生日和 MBTI，推一张只属于你的峰峻命盘。本命 Top3、天生缘分、前世关系、TF 气质档案 —— 36 位哥哥，36 种被遇见的方式。</p>
+      <h1 class="hero-title-simple">峰峻命盘</h1>
+      <p class="lead">用你的生日和 MBTI，推一张只属于你的峰峻命盘。</p>
       <div class="hero-cta">
         <button class="btn btn-primary" onclick="scrollToTests()">
           开始我的命盘
@@ -556,8 +839,8 @@
   <section class="section" id="tests">
     <div class="container">
       <div style="text-align:center; max-width: 580px; margin: 0 auto 48px;">
-        <p class="eyebrow" style="background: #f0e9ff; color: var(--secondary); border-color: var(--secondary);">四大测试</p>
-        <h2>从日柱、五行、MBTI<br/>一次给出 4 种答案</h2>
+        <p class="eyebrow" style="background: #f0e9ff; color: var(--secondary); border-color: var(--secondary);">四项测试</p>
+        <h2>从日柱、五行、MBTI<br/>出发的四段相遇</h2>
       </div>
       <div class="grid-4" style="gap: 20px;">
         <button class="feature v1" onclick="pickTest('love')">
@@ -581,7 +864,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>
           </div>
           <h3>本命 Top3</h3>
-          <p>算出 36 位哥哥里和你最合拍的三位，一张分享卡带走，覆盖全家族。</p>
+          <p>算出成员池里和你最合拍的三位，一张分享卡带走，覆盖全家族。</p>
           <span class="f-cta">查本命 Top3 →</span>
         </button>
         <button class="feature v4" onclick="pickTest('profile')">
@@ -589,7 +872,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
           </div>
           <h3>TF 气质档案</h3>
-          <p>五行·生肖·星座·幸运应援色·本周守护哥哥 · 10+ 维度一键生成。</p>
+          <p>五行·生肖·星座·幸运应援色·本周守护成员 · 10+ 维度一键生成。</p>
           <span class="f-cta">生成气质档案 →</span>
         </button>
       </div>
@@ -600,9 +883,8 @@
     <div class="container">
       <div class="stats-wrap">
         <p class="eyebrow" style="background: rgba(255,190,61,0.2); color: var(--warning); border-color: var(--warning); margin-bottom: 40px;">BY THE NUMBERS</p>
-        <div class="grid-4" style="gap: 32px;">
-          <div class="stat"><div class="stat-num">36<span class="stat-unit">位</span></div><p class="stat-label">一代到四代全家族成员就绪</p></div>
-          <div class="stat"><div class="stat-num">5<span class="stat-unit">代</span></div><p class="stat-label">1999 到 2012 跨越 13 年的练习生谱系</p></div>
+      <div class="grid-3" style="gap: 32px;">
+        <div class="stat"><div class="stat-num">5<span class="stat-unit">代</span></div><p class="stat-label">1999 到 2012 跨越 13 年的练习生谱系</p></div>
           <div class="stat"><div class="stat-num">2<span class="stat-unit">字段</span></div><p class="stat-label">只需生日 + MBTI，后台推 24 维命盘</p></div>
           <div class="stat"><div class="stat-num">15<span class="stat-unit">s</span></div><p class="stat-label">从打开页面到看到结果，最快十五秒</p></div>
         </div>
@@ -618,6 +900,10 @@
       </div>
       <div class="foot-links"><a href="#">关于</a><a href="#">隐私</a><a href="#">反馈</a></div>
       <div>© 2026 · Fan-made · Not affiliated with 时代峰峻</div>
+    </div>
+    <div class="disclaimer-box">
+      <b>关于本项目的说明</b>
+      <p>本项目只是借用传统干支、五行、星座符号做的一场趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。所有结果为创作灵感维度，不是严谨运算，也不代表艺人本人意愿及实际关系。</p>
     </div>
     <p class="fun-note">本站所有测试基于公开资料，仅供娱乐，与艺人本人意愿及实际关系无关。</p>
   </footer>
@@ -653,10 +939,35 @@
         <p class="form-error" id="birth-error">请检查生日是否正确</p>
       </div>
 
+      <!-- 世代筛选（多选） -->
+      <div class="form-group">
+        <label class="field-label">想匹配哪些世代（可多选）</label>
+        <div class="era-grid" id="era-grid">
+          <button type="button" class="era-btn active" data-era="1">一代</button>
+          <button type="button" class="era-btn active" data-era="2">二代</button>
+          <button type="button" class="era-btn active" data-era="3">三代</button>
+          <button type="button" class="era-btn active" data-era="4">四代</button>
+        </div>
+        <button type="button" class="era-all-btn" id="era-all">全部世代</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">不选也没关系，默认全部世代</p>
+      </div>
+
       <div class="form-group">
         <label class="field-label">MBTI</label>
         <div class="mbti-grid" id="mbti-grid"></div>
         <button type="button" class="mbti-unknown" id="mbti-unknown">我还不知道我的 MBTI</button>
+        <p class="disclaimer-mini" style="text-align:left;margin-top:8px;">
+          成员的 MBTI 为粉丝据公开表现推测整理，公司从未官方公布，可能存在错漏，仅供娱乐。
+        </p>
+      </div>
+
+      <!-- 测前世时才显示：选个想测的成员（可选） -->
+      <div class="form-group" id="idol-pick-wrap" style="display:none;">
+        <label class="field-label">想测哪位成员（选填）</label>
+        <select class="field" id="f-idol">
+          <option value="">让系统帮我挑一位最有缘的</option>
+        </select>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;">不选的话，会从 36 位里推一位最有缘的给你</p>
       </div>
 
       <button class="btn btn-primary submit-btn" id="submit-btn" disabled onclick="submitForm()">
@@ -717,48 +1028,52 @@
 <script>
 /* ================================================================
  * 数据：时代峰峻 36 位成员（一代3 + 二代7 + 三代11 + 四代15）
- * MBTI 为粉丝公认版本，仅为娱乐
+ * ⚠️ MBTI 说明：经纪公司从未官方公布过任何成员的 MBTI。
+ *    下表 m 字段均为「粉丝据采访/直播/综艺表现推测整理」，存在大量分歧与错漏，
+ *    仅作娱乐游戏的趣味标签使用，不代表本人真实类型。
+ *    如发现有误，欢迎反馈修正：hi@fengjun-saju.local
  * ================================================================ */
 const MEMBERS = [
   // 一代 TFBOYS
   {n:"王俊凯",g:"TFBOYS",b:"1999-09-21",m:"ENFJ",era:1,role:"队长"},
   {n:"王源",  g:"TFBOYS",b:"2000-11-08",m:"INFP",era:1,role:"主唱"},
-  {n:"易烊千玺",g:"TFBOYS",b:"2000-11-28",m:"INFJ",era:1,role:"主舞"},
+  {n:"易烊千玺",g:"TFBOYS",b:"2000-11-28",m:"ISFP",era:1,role:"主舞"},
   // 二代 时代少年团
-  {n:"马嘉祺",g:"时代少年团",b:"2002-12-12",m:"INFJ",era:2,role:"队长"},
-  {n:"丁程鑫",g:"时代少年团",b:"2002-02-24",m:"ISFJ",era:2,role:"主舞"},
-  {n:"宋亚轩",g:"时代少年团",b:"2004-03-04",m:"ISFP",era:2,role:"主唱"},
-  {n:"刘耀文",g:"时代少年团",b:"2005-09-23",m:"ESTP",era:2,role:"主舞/rap"},
-  {n:"张真源",g:"时代少年团",b:"2003-04-16",m:"ISTP",era:2,role:"vocal"},
-  {n:"严浩翔",g:"时代少年团",b:"2004-08-16",m:"ENTP",era:2,role:"rap"},
-  {n:"贺峻霖",g:"时代少年团",b:"2004-06-15",m:"ENFP",era:2,role:"主持/rap"},
+  {n:"马嘉祺",g:"时代少年团",b:"2002-12-12",m:"INFP",era:2,role:"队长"},
+  {n:"丁程鑫",g:"时代少年团",b:"2002-02-24",m:"ENFP",era:2,role:"主舞"},
+  {n:"宋亚轩",g:"时代少年团",b:"2004-03-04",m:"ENFP",era:2,role:"主唱"},
+  {n:"刘耀文",g:"时代少年团",b:"2005-09-23",m:"ENFP",era:2,role:"主舞/rap"},
+  {n:"张真源",g:"时代少年团",b:"2003-04-16",m:"INFJ",era:2,role:"vocal"},
+  {n:"严浩翔",g:"时代少年团",b:"2004-08-16",m:"ESTJ",era:2,role:"rap"},
+  {n:"贺峻霖",g:"时代少年团",b:"2004-06-15",m:"ENFJ",era:2,role:"主持/rap"},
   // 三代 登陆少年 + TF_ING
-  {n:"朱志鑫",g:"登陆少年",b:"2005-11-19",m:"ESFJ",era:3,role:"门面"},
-  {n:"左航",  g:"登陆少年",b:"2006-05-22",m:"ESTP",era:3,role:"rap"},
-  {n:"张极",  g:"登陆少年",b:"2007-02-03",m:"ENFP",era:3,role:"vocal"},
-  {n:"张泽禹",g:"登陆少年",b:"2007-04-30",m:"ISFP",era:3,role:"vocal"},
-  {n:"苏新皓",g:"登陆少年",b:"2007-01-12",m:"ISTP",era:3,role:"舞担"},
-  {n:"童禹坤",g:"TF_ING",  b:"2006-07-07",m:"INFJ",era:3,role:"vocal"},
-  {n:"邓佳鑫",g:"TF_ING",  b:"2006-07-23",m:"ESFP",era:3,role:"vocal"},
-  {n:"穆祉丞",g:"TF_ING",  b:"2007-11-16",m:"ISFP",era:3,role:"舞担"},
-  {n:"张子墨",g:"TF_ING",  b:"2008-02-20",m:"INTP",era:3,role:"vocal"},
-  {n:"黄朔",  g:"TF_ING",  b:"2008-08-24",m:"ESTJ",era:3,role:"全能"},
-  {n:"余宇涵",g:"solo",    b:"2006-11-24",m:"ENTP",era:3,role:"solo"},
+  {n:"朱志鑫",g:"登陆少年",b:"2005-11-19",m:"INFP",era:3,role:"门面"},
+  {n:"左航",  g:"登陆少年",b:"2006-05-22",m:"INFP",era:3,role:"rap"},
+  {n:"张极",  g:"登陆少年",b:"2007-02-03",m:"INFP",era:3,role:"vocal"},
+  {n:"张泽禹",g:"登陆少年",b:"2007-04-30",m:"ESTJ",era:3,role:"vocal"},
+  {n:"苏新皓",g:"登陆少年",b:"2007-01-12",m:"ENTJ",era:3,role:"舞担"},
+  {n:"童禹坤",g:"TF_ING",  b:"2006-07-07",m:"ENFP",era:3,role:"vocal"},
+  {n:"邓佳鑫",g:"TF_ING",  b:"2006-07-23",m:"ENTP",era:3,role:"vocal"},
+  {n:"穆祉丞",g:"TF_ING",  b:"2007-11-16",m:"ENFP",era:3,role:"舞担"},
+  {n:"张子墨",g:"TF_ING",  b:"2008-02-20",m:"ENFP",era:3,role:"vocal"},
+  {n:"黄朔",  g:"TF_ING",  b:"2008-08-24",m:"ENFP",era:3,role:"全能"},
+  {n:"张峻豪",g:"solo",    b:"2007-07-20",m:"ISFP",era:3,role:"solo"},
+  {n:"余宇涵",g:"solo",    b:"2006-11-24",m:"ENFJ",era:3,role:"solo"},
   // 四代练习生
-  {n:"官俊臣",g:"四代",b:"2007-07-04",m:"ISTJ",era:4,role:"vocal"},
+  {n:"官俊臣",g:"四代",b:"2007-07-04",m:"INFP",era:4,role:"vocal"},
   {n:"张桂源",g:"四代",b:"2009-05-11",m:"ENFP",era:4,role:"舞担"},
-  {n:"张函瑞",g:"四代",b:"2009-10-18",m:"INFP",era:4,role:"主唱"},
-  {n:"王橹杰",g:"四代",b:"2010-01-08",m:"ISFJ",era:4,role:"vocal"},
-  {n:"王烁然",g:"四代",b:"2010-03-15",m:"ENFP",era:4,role:"舞担"},
-  {n:"左奇函",g:"四代",b:"2010-03-19",m:"ESTP",era:4,role:"rap"},
-  {n:"陈奕恒",g:"四代",b:"2010-05-09",m:"INFJ",era:4,role:"舞担"},
+  {n:"张函瑞",g:"四代",b:"2009-10-18",m:"INFJ",era:4,role:"主唱"},
+  {n:"王橹杰",g:"四代",b:"2010-01-08",m:"ENFJ",era:4,role:"vocal"},
+  {n:"王烁然",g:"四代",b:"2010-03-15",m:"ESFP",era:4,role:"舞担"},
+  {n:"左奇函",g:"四代",b:"2010-03-19",m:"ENTJ",era:4,role:"rap"},
+  {n:"陈奕恒",g:"四代",b:"2010-05-09",m:"ENFJ",era:4,role:"舞担"},
   {n:"杨博文",g:"四代",b:"2010-06-01",m:"INFP",era:4,role:"创作"},
-  {n:"杨涵博",g:"四代",b:"2010-06-08",m:"ISFP",era:4,role:"vocal"},
-  {n:"张奕然",g:"四代",b:"2010-09-15",m:"ESFP",era:4,role:"舞担"},
-  {n:"聂玮辰",g:"四代",b:"2011-02-18",m:"INFP",era:4,role:"vocal"},
-  {n:"陈思罕",g:"四代",b:"2011-11-08",m:"ISFP",era:4,role:"舞担"},
-  {n:"魏子宸",g:"四代",b:"2011-12-19",m:"INFJ",era:4,role:"vocal"},
-  {n:"李煜东",g:"四代",b:"2012-03-15",m:"ESFP",era:4,role:"舞担"},
+  {n:"杨涵博",g:"四代",b:"2010-06-08",m:"INTJ",era:4,role:"vocal"},
+  {n:"张奕然",g:"四代",b:"2010-09-15",m:"ENFP",era:4,role:"舞担"},
+  {n:"聂玮辰",g:"四代",b:"2011-02-18",m:"ENFP",era:4,role:"vocal"},
+  {n:"陈思罕",g:"四代",b:"2011-11-08",m:"INFJ",era:4,role:"舞担"},
+  {n:"魏子宸",g:"四代",b:"2011-12-19",m:"INTJ",era:4,role:"vocal"},
+  {n:"李煜东",g:"四代",b:"2012-03-15",m:"INFP",era:4,role:"舞担"},
   {n:"陈浚铭",g:"四代",b:"2012-05-17",m:"ENFP",era:4,role:"最幼"}
 ];
 
@@ -813,22 +1128,44 @@ function ttiRel(a,b){
   if (Math.abs(a-b)===6) return 'chung';
   return 'normal';
 }
-const SAJU_SCORE = {idolFeedsMe:30,meFeedsIdol:30,same:22,clash:10};
-const ZHI_SCORE = {samhap:10,yukhap:10,same:6,normal:4,chung:1};
-const MONTH_SCORE = {idolFeedsMe:10,meFeedsIdol:10,same:7,clash:3};
-const TTI_SCORE = {samhap:10,yukhap:10,same:6,normal:4,chung:1};
+/* ---------- 权重（全部正向计分，不倒扣）---------- */
+/* 新权重合计 100：
+   五行意象互补 30 + 干支合/三合意象 20 + 月令季节气质 15
+ + MBTI 气质共鸣 15 + 太阳星座元素 12 + 生肖民俗意象 8   */
+const SAJU_SCORE  = {idolFeedsMe:30, meFeedsIdol:30, same:26, clash:18};   // 满分30
+const ZHI_SCORE   = {samhap:20, yukhap:20, same:14, normal:11, chung:8};   // 满分20
+const MONTH_SCORE = {idolFeedsMe:15, meFeedsIdol:15, same:12, clash:8};    // 满分15
+const TTI_SCORE   = {samhap:8, yukhap:8, same:6, normal:5, chung:4};       // 满分8
+/* 太阳星座 → 四大元素：火/土/风/水 */
+const ZODIAC_EL = ['土','风','水','火','土','风','水','火','土','风','水','火']; // 摩羯..射手
+const ZODIAC_EL_NAME = ['土','风','水','火'];
+const ZODIAC_SCORE = {same:12, compatible:9, neutral:6};                    // 满分12
+/* 星座元素契合：同元素=同频；火风互补、土水互补=compatible；火水、土风=neutral */
+const ZODIAC_COMPAT = {
+  '土-土':12,'风-风':12,'水-水':12,'火-火':12,
+  '火-风':9,'风-火':9,'土-水':9,'水-土':9,
+  '火-水':6,'水-火':6,'土-风':6,'风-土':6
+};
+function zodiacScore(m1,d1,m2,d2){
+  const z1 = ZODIAC_EL[zodiacIndex(m1,d1)];
+  const z2 = ZODIAC_EL[zodiacIndex(m2,d2)];
+  const key = z1+'-'+z2;
+  return ZODIAC_COMPAT[key] || 6;
+}
+function zodiacIndex(m,d){ return d < ZODIAC_CUT[m-1] ? m-1 : m%12; }
+/* MBTI 气质共鸣：满分 15 */
+function mbtiResonance(a,b){
+  if (!a || !b) return 9;                    // 未知 → 中位
+  if (BEST[a].includes(b) || BEST[b].includes(a)) return 15;
+  if (a[1]===b[1]) return 12;                // 感知方式一致
+  return 8;
+}
 const BEST = {
   INFP:['ENFJ','ENTJ'],ENFP:['INFJ','INTJ'],INFJ:['ENFP','ENTP'],ENFJ:['INFP','ISFP'],
   INTJ:['ENFP','ENTP'],ENTJ:['INFP','INTP'],INTP:['ENTJ','ESTJ'],ENTP:['INFJ','INTJ'],
   ISFP:['ENFJ','ESFJ','ESTJ'],ESFP:['ISFJ','ISTJ'],ISTP:['ESFJ','ESTJ'],ESTP:['ISFJ','ISTJ'],
   ISFJ:['ESFP','ESTP'],ESFJ:['ISFP','ISTP'],ISTJ:['ESFP','ESTP'],ESTJ:['ISFP','ISTP','INTP']
 };
-function mbtiScore(a,b){
-  if (!a || !b) return 26;
-  if (BEST[a].includes(b) || BEST[b].includes(a)) return 40;
-  if (a[1]===b[1]) return 28;
-  return 18;
-}
 function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
 
 function scoreOne(user, idol){
@@ -840,9 +1177,13 @@ function scoreOne(user, idol){
   const uMon = monthEl(um,ud), iMon = monthEl(im,id);
   const sRel = sajuRel(uEl,iEl);
   const tRel = ttiRel(uAni,iAni);
-  const mScore = mbtiScore(user.mbti, idol.m);
-  const score = SAJU_SCORE[sRel] + ZHI_SCORE[ttiRel(uZhi,iZhi)] + MONTH_SCORE[sajuRel(uMon,iMon)] + TTI_SCORE[tRel] + mScore;
-  return {score, sRel, tRel, mScore, uEl, iEl, uAni, iAni};
+  const zRel = ttiRel(uZhi,iZhi);          // 日支（干支意象）
+  const mScore = mbtiResonance(user.mbti, idol.m);
+  const zcScore = zodiacScore(um,ud,im,id);
+  const raw = SAJU_SCORE[sRel] + ZHI_SCORE[zRel] + MONTH_SCORE[sajuRel(uMon,iMon)]
+            + mScore + zcScore + TTI_SCORE[tRel];
+  const score = Math.max(20, Math.min(100, raw));   // 保底 ≥20，封顶 100
+  return {score, sRel, tRel, zRel, mScore, zcScore, uEl, iEl, uAni, iAni, uMon, iMon};
 }
 
 function scoreAll(user, pool){
@@ -857,74 +1198,231 @@ function scoreAll(user, pool){
 /* ================================================================
  * 前世关系（choiaesaju past-calc.js 移植 · 本土化卡池）
  * ================================================================ */
+/* ================================================================
+ * 前世故事 · 长文创作（120-180字）
+ * 结构：写意古风场景 → 一件微小事件 → 两人互动 → 情绪基调 → 留白
+ * 关系多元：知己 / 损友 / 同乡 / 萍水贵人 / 同门 / 邻里 / 过客 / 情债
+ * ================================================================ */
 const PAST_NORMAL = [
-  {t:"练习室里互扔水瓶的死对头",s:"你和{idol}是同期练习生 · 对方的进步让你夜里睡不着，你的 freestyle 让他每天多练两小时。日复一日的较劲里，两人默契比谁都好——只是嘴上死都不说。"},
-  {t:"宿舍里的上下铺",s:"上铺的{idol}每晚十一点准时装睡，下铺的你偷偷在被窝里刷手机 · 他其实都知道。生日那天他把攒了半年的零花钱塞进你抽屉，到现在都不承认。"},
-  {t:"后勤阿姨最偏爱的两个弟弟",s:"每次加餐，{idol}一定给你留一份 · 公司阿姨都看得明白，只有你俩装不懂。"},
-  {t:"打架斗嘴到锁喉的塑料兄弟",s:"你们一个月要互相嫌弃三十次 · 但只要外面有人说对方一句不是，你比他本人还急。"},
-  {t:"同一场选拔的 90 分和 89 分",s:"你拿到了那年的练习生 S 评级，{idol}差你一分 · 后来每次颁奖，他眼睛里都是不服输的光，可举起奖杯时第一个感谢你。"},
-  {t:"把彼此的歌单循环到烂的粉丝",s:"你们在成为同事之前就互相喜欢对方的歌 · 第一次搭档时紧张到连和弦都忘了。"},
-  {t:"同一堂舞蹈课的两个新人",s:"动作记得最慢的那个是{idol} · 你每次下课都借口拉筋多留十分钟陪他过动作，教练心照不宣。"},
-  {t:"宿舍阳台的夜聊搭子",s:"凌晨两点睡不着，{idol}悄悄敲你门 · 两人穿着拖鞋在阳台上聊到天亮，聊未来、聊想家、聊怎么红也聊喜欢的女生。"},
-  {t:"同台救场的默契拍档",s:"直播突然 bug，{idol}的耳返坏了半首歌 · 你用口型把每一句下一句都唱给他看，台下的粉丝到现在都没发现。"},
-  {t:"把合体舞台跳到成绝版的两个人",s:"那年年末的二创合体，是整个公司最爆的一次 · 后来各自忙各自，但只要有人提起那支舞，你们的眼神都会先对上。"}
+  {t:"不共戴天的死对头",
+   s:"你们从第一次见面就看对方不顺眼。他嫌你做事慢，你嫌他太张扬，为一点小事能争上三天，谁劝都没用。可那次你被外人欺负，第一个冲上去的是他，打完还嘴硬：我只是看不惯他们欺负人，换谁都一样。你没拆穿他，他也装作不知道你知道。",
+   tr:"所以这一世，你们见面还是要斗两句。但谁真遇到事，另一个一定在场——这规矩从来没变过。",
+   la:"「换谁我都这样，别多想。」"},
+  {t:"世仇家族的继承人",
+   s:"两家的恩怨从祖辈就开始了，谁也说不清最初是为了什么。家里明令禁止你们往来，你们却在祠堂后的老槐树下偷偷见了一面又一面。他带来家里的书，你带来自家的点心，交换的时候谁也不看谁，像在做一笔见不得光的买卖。后来两家和解了，那棵槐树还在，你们却已经不太说话了。",
+   tr:"所以这一世，你们之间有种「明明没有阻力了，却还是习惯绕远」的别扭。那点别扭是祖上留的。",
+   la:"「明天……还是老地方？」"},
+  {t:"老师与叛逆学生",
+   s:"你是先生，{idol}是学堂里最坐不住的那个。你让他背书，他在底下画你的肖像；你罚他抄书，他把罚抄的纸折成纸鸢放上了屋顶。你气得胡子发抖，却在多年后整理旧物时，从箱底翻出那一沓画——画得居然挺像。你把纸鸢的线收好，压在了书页里。",
+   tr:"所以这一世，你对他不按规矩来这件事格外宽容。你早就知道，他的聪明长在别处。",
+   la:"「抄完了？那……把手伸出来。」"},
+  {t:"暴君与唯一的忠臣",
+   s:"你坐在那个位置上，所有人都怕你，只有{idol}还敢在你面前说真话。他说得难听，你听得生气，却从来没治他的罪。直到有一天他真的走了——你才发现满殿的人里，再没一个敢直视你的眼睛。你派人找了他三年，最后在城外一间旧屋里找到他，他已是白发。你没带他回去，只坐了一下午。",
+   tr:"所以这一世，你身边能说真话的人很少。你在找的，一直是那双敢直视你的眼睛。",
+   la:"「别人都不敢说，只有你敢。」"},
+  {t:"战场上最后的两个幸存者",
+   s:"那一仗打完，上千人的队伍只剩你们两个。夜里你们背靠着背坐在尸堆旁，谁也不敢先睡。你数星星，他数还剩几支箭。天快亮的时候他说：要是能活着回去，我请你喝酒。后来你们都活下来了，却各自去了不同的地方，那顿酒一直欠着。",
+   tr:"所以这一世，他欠你一顿酒，你也欠他一句谢谢。那晚的两个人，谁都没真的走出来。",
+   la:"「活着回去……我请你喝酒。」"},
+  {t:"将军与他的战马",
+   s:"你是那匹马，{idol}是骑在你背上的将军。别人来牵，你一律尥蹶子，只有他靠近时你才安静。你驮着他穿过无数战场，也被他刷过无数次毛。他卸甲归田那天，把你牵到草场上，解开缰绳说：你也自由了。你没走，就在那片草场待了一辈子。",
+   tr:"所以这一世，你认人认得很死。别人再好，你只认那一个肯给你解开缰绳的。",
+   la:"「去吧……你也自由了。」"},
+  {t:"互为对方的守护神",
+   s:"你们是彼此的守护神，各自守着对方的一小片命数。你替他挡过灾，他替你熬过劫。可守护神的规矩是不能现身，所以你们守了几十年，谁也没见过谁。只在命运交错的一瞬，你看见过一个模糊的背影，他感觉到过一阵没来由的心安。",
+   tr:"所以这一世，你们常常刚好错过，却总在最险的地方化险为夷。那是对方在看不见的地方动了手。",
+   la:"「我不能现身……但一直在。」"},
+  {t:"勾魂使者与亡魂",
+   s:"你是来引路的，{idol}是你要带走的人。按规矩，时辰到了就该走。可他磨磨蹭蹭，说还有一句话没说完，还有一个人在等。你本该铁面无私，却一次次把时辰往后推，把簿子上的日子改了又改。上头问起来，你只写了一句：此人尚有未了之事，暂缓。",
+   tr:"所以这一世，你特别受不了来不及的告别。那本簿子上的暂缓，你写了太久。",
+   la:"「再给你一会儿……就一会儿。」"},
+  {t:"酒馆常客与老板娘",
+   s:"你每天来，每天赊账，每天说明天一起结。{idol}是店里的老板娘，每次都嘴上骂你，手上却多给你舀一勺热汤。有回你真病了三天没去，第四天她亲自端了碗汤上门，放下就走，一句话没说。你后来把三年的账一次还清了，她数了数说：多了。你说：多的那部分是汤钱。",
+   tr:"所以这一世，你欠过别人的，总想加倍还回去。那一勺一勺的热汤，你一直记得。",
+   la:"「汤趁热喝，账……不急。」"},
+  {t:"迷路的孩子与旅人",
+   s:"你在集市上走丢了，站在街中间不知道该往哪走。{idol}是路过的人，蹲下来问了你叫什么名字，牵着你走了三条街，把你送到了家门口。你想问他的名字，回头时他已经走远了。那只手心的温度你记了很多年，却再没见过那个人。",
+   tr:"所以这一世，你特别怕看见走丢的小孩，总会忍不住上前问一句：你叫什么名字？",
+   la:"「别怕，我送你回家。」"},
+  {t:"金斧头樵夫与山神",
+   s:"你的斧头掉进了湖里，{idol}是山神，先捞起一把金的问是不是你的，你说不是；又捞起一把银的，你还说不是。直到那把生锈的铁斧头浮上来，你才点头。山神笑了，把三把都给了你。你回去跟人炫耀，说山神赏了我三把斧头——却没说，前两把我都没要。",
+   tr:"所以这一世，你不太会撒谎，尤其是对不是自己的东西。那两把斧头，你拒绝得很自然。",
+   la:"「不是我的……我要那把铁的。」"},
+  {t:"贵族家的书童与少爷",
+   s:"你是伴读的书童，{idol}是你陪着长大的少爷。他读书你研墨，他挨罚你陪站；他偷偷把点心塞给你，说我吃不完，其实那是他省下来的。后来他赴考做官，你留在旧宅看门。他每年寄一封信回来，你每封都回，字写得端端正正，却从不提自己过得如何——只写院里的树又高了一截。",
+   tr:"所以这一世，你习惯把别人的事放在自己前面。那句我吃不完，你信了一辈子。",
+   la:"「吃不完，你帮我吃了吧。」"},
+  {t:"国王与宫廷小丑",
+   s:"你坐在王座上，满殿的人都在讨好你，只有{idol}——那个戴铃铛的小丑——敢当面学你走路。所有人大惊失色，你却笑了，那是那一年你第一次笑。此后你情绪不好就召他来，他翻个跟头，你就忘了烦恼。你赐过他金银，他不要，只问：陛下今天开心吗。",
+   tr:"所以这一世，你难过时需要的不是安慰，是一个能让你忘了身份、放声笑的人。",
+   la:"「陛下……今天开心吗？」"},
+  {t:"画家与他的缪斯",
+   s:"你是画师，{idol}是你画了无数遍的那个人。你能画山水、画花鸟，也画得很好，可你只想画他——侧脸、正脸、笑的、不笑的，光是低头的样子就画了十几张。画到第七十张的时候他终于问：为什么总是我。你说：因为别的都不好看。他没接话，第二天还是准时来坐下了，坐得比谁都端正。",
+   tr:"所以这一世，你很容易对一个人专注得不像话。你的眼睛只肯装下那一个。",
+   la:"「别的都不好看……只画你。」"},
+  {t:"龟兔赛跑的龟与兔",
+   s:"那场赛跑你输了，可这事没完。此后你们又比了无数次：比爬树、比背诗、比谁先跑到渡口、比谁先把手伸进冰凉的溪水里。你天生比他快，却总在半路打盹，醒了又懊恼；他一步一步，从不停，也从不等。你们谁也没真正赢过谁，却比谁都清楚对方有几斤几两——连对方会喘几口气，都数得出来。",
+   tr:"所以这一世，你有个怎么甩都甩不掉的对手。与其说是对手，不如说是一把尺子。",
+   la:"「再来一次，这次我不睡。」"},
+  {t:"卖年糕的与老虎",
+   s:"你挑着担子卖年糕，半路遇见{idol}——那是一只老虎。它说：给我一个年糕，我就不吃你。你给了。它吃完又说：再来一个。你又给。就这样它吃了你三百个年糕，最后连担子一起吞了下去。你到最后一刻才明白：从头到尾，它就没打算守约。",
+   tr:"所以这一世，你容易相信最后一次。那只老虎教会你的事，你学得很慢。",
+   la:"「最后一个……真的最后了。」"},
+  {t:"书院同桌",
+   s:"你们是书院里共用一张桌的同桌。他写字总越过中线，你就把砚台往边上挪，挪到后来砚台几乎悬在桌沿；你打瞌睡，他就用笔杆悄悄戳你，戳完还装作在写字。有回先生让背文章，你们俩一起卡在同一句，被罚站到日落。站到一半，两人隔着院子同时笑了出来，笑得连先生都绷不住。",
+   tr:"所以这一世，你有个一想到就忍不住笑的人。那些没出息的小事，才是真的。",
+   la:"「别睡了，先生看过来了。」"},
+  {t:"铲屎官的猫",
+   s:"你是那只猫，{idol}是每天给你开罐头的人。你打翻过他的杯子，抓花过他的沙发，半夜还在他枕头边叫，叫到他迷迷糊糊伸手摸你一下才停。他却从来没生气过，只说一句随你吧，然后把被子掀开一角，让你钻进去。你一直觉得，自己是这世上被爱得最理直气壮的猫——而且从来没人反驳过你。",
+   tr:"所以这一世，你在他面前特别放得开，甚至有点任性。因为你确定他不会生气。",
+   la:"「随你吧……反正我惯着你。」"},
+  {t:"恶老板与跳槽的下属",
+   s:"你是那个总在下班前五分钟甩活的人，{idol}是天天加班的那个。你让他改了十一版，最后一版说还是第一版好。他没顶嘴，只是第二天递了辞呈。几年后他的铺子开在对街，生意比你好三倍。你路过时看见他在柜台后算账，抬眼冲你点了点头，你反而先移开了视线。",
+   tr:"所以这一世，你不太敢再随便使唤人，遇事也学会自己先动手。柜台后那个轻轻的点头，你记了很久，比任何指责都久。",
+   la:"「第一版……还是第一版吧。」"},
+  {t:"贪官与巡按御史",
+   s:"你是那个伸手的人，{idol}是来查你的人。你换了三个地方躲，他追了三个地方。最后你站在他面前，以为完了。他却把卷宗合上，只问了一句：你最初当官时，想的是什么。你答不上来。他没抓你，只说：想起来了，自己去投案。",
+   tr:"所以这一世，你最怕有人问你最初想做什么。那个问题，比任何惩罚都重。",
+   la:"「想起来了，自己来找我。」"},
+  {t:"说话的土豆与见习魔法师",
+   s:"{idol}是个刚入门的见习法师，咒语念错了半个音，把你变成了一颗会说话的土豆。更糟的是——他忘了怎么变回来。他翻遍了整座塔的魔法书，急得直哭。你滚到他脚边，用土豆的嗓子喊：别哭了，先想咒语！他愣了一下，一边抹眼泪一边继续翻。",
+   tr:"所以这一世，你越慌的时候越能冷静地指挥人。那颗土豆的嗓子，喊得很响。",
+   la:"「别哭了！先想办法！」"},
+  {t:"御膳里的鸡与国王",
+   s:"你是被端上桌的那只鸡，{idol}是动筷子的人。你这一辈子很短，短到没来得及看清院子外的天，最后停在那张摆满菜的桌上，冒着热气。他吃得很干净，连骨头都啃得仔细，还抬头点评了一句：今天的鸡炖得不错，赏。那是你听到的最后一句话，也是这一生里唯一一句——偏偏还是夸你的。",
+   tr:"所以这一世，你听见别人随口的一句评价会记很久。哪怕只是随口说说。",
+   la:"「今天的鸡……炖得不错。」"},
+  {t:"将军与失踪的左脚鞋",
+   s:"出征前一晚，{idol}的左脚鞋不见了。全营翻遍也没找到，他因此晚到了半日。等他赶到，先前出发的队伍正遇上伏击。那只滚到床底的鞋，让他活了下来。后来他打了很多胜仗，却一直留着那只右脚的鞋——左脚的那只，始终没找到。",
+   tr:"所以这一世，你偶尔会因为一点小意外耽误大事。别急，那可能是鞋在救你。",
+   la:"「那只鞋……到底滚哪儿去了。」"}
 ];
 const PAST_ROMANCE = [
-  {t:"被公司禁止同台的糖",s:"你和{idol}在一次练习室里被团建抓拍到咬同一根 Pocky · 从此公司规定你们一周不能同框，可你俩现在还把那张糊照当手机壁纸。"},
-  {t:"初恋滤镜一直没破的两个人",s:"你是{idol}出道前最后喜欢的那个人 · 他把你送的那条毛线围巾收到了衣橱最里面，从没对任何人提过。"},
-  {t:"错过了一个主题曲的两个人",s:"原本你们要一起上那首情歌 · 开录前一天其中一个被换掉，后来两人每次听到前奏都会沉默五秒。"}
+  {t:"亡国公主与守护武士",
+   s:"城破那夜，宫门上的火光映红了半边天。你是最后一位还没出城的人，{idol}是誓死不离的守护武士。他牵来一匹马，自己却执意步行断后，说：我走在你后面，才看得见你安全。此后许多年，你在异乡听说有位隐居的武人，拒了所有官职，只守着一座空宅——宅里挂着的，是一幅旧年宫中的画像。",
+   tr:"所以这一世，你总在他身后发现有人替你把事办妥了。不是巧合，那夜他就说过，他要在你后面。",
+   la:"「我走在你后面，才看得见你安全。」"},
+  {t:"反贼与皇帝",
+   s:"你是举旗的那个人，{idol}是坐在龙椅上的那位。兵临城下那日，你被押到殿前，以为必死。他却屏退左右，只问了一句：你当年说的话，现在还算数吗。你说：算。他沉默了很久，最后挥手让你退下，从此再没提过这件事。史书上你们是死敌，只有那座空殿知道，你们曾认真地谈过一次。",
+   tr:"所以这一世，你们立场常常不同，却从不相恨。那种「我懂你为何那样做」的沉默，比和解还深。",
+   la:"「你当年说的话……现在还算数吗？」"},
+  {t:"龙王与被献祭的少年",
+   s:"那年大旱，村里把最洁净的少年沉了江——那是{idol}。你本该是收祭的龙王，却在看清他眼神的那一刻，把他带回了水下宫殿。你给他绫罗、给他不老的光阴，却始终没答应放他回岸上。他站在殿前看水面，一站就是很多年。你不是恶，只是舍不得；他也知道你舍不得。",
+   tr:"所以这一世，你对他总有种「想留又怕留」的犹豫。舍不得这件事，你们两个都懂。",
+   la:"「岸上的事我不管了……你别赶我走。」"},
+  {t:"青梅竹马 · 没能说出口的告别",
+   s:"你们在一条巷子里长大，从爬树到一起进学堂，所有的第一次都在一起。搬家那天，他站在巷口等了很久，你却躲在门后没敢出来——怕一开口就哭。那句别走终究没说。多年后老同学聚会，他隔着人群举杯，说的却是：你那天怎么没来送我。你笑了笑，没答。",
+   tr:"所以这一世，你最怕的就是来不及告别。哪怕只是分开几天，也要认真说一声再见。",
+   la:"「那天……你怎么没来送我。」"},
+  {t:"前任与现任",
+   s:"你是他很久以前喜欢过的那个人，{idol}是他后来牵手的人。三人同桌那次，你本想找出她哪里不好，好让自己死心；可看着看着，你发现她笑起来的样子，居然和你有点像。你终于明白，他从头到尾喜欢的就是同一种人——只是后来那一个，不是你。",
+   tr:"所以这一世，你对他身边的谁都不讨厌。因为你认得出，那也是你身上的某一部分。",
+   la:"「她笑起来……其实有点像你。」"}
 ];
 
+/* ---------- 前世关系：日支六合判定 + 60甲子哈希抽卡（对齐 choiaesaju）---------- */
 function pastRel(user){
-  // 用用户生日 vs 一个随机成年成员（这里为了"前世"叙事，用户和一位哥哥做组合）
-  // 简化：取用户最适合的成年哥哥作为"TA"
-  const adultPool = MEMBERS.filter(x => ageOf(...x.b.split('-').map(Number))>=18);
-  const scores = scoreAll(user, adultPool);
-  const idol = scores[0].idol;
-  const a = dayIndex(user.y,user.m,user.d);
-  const [iy,im,id] = idol.b.split('-').map(Number);
-  const b = dayIndex(iy,im,id);
-  const yukhap = (a%12 + b%12) % 12 === 1;
-  const adult = ageOf(iy,im,id) >= 18;
+  // 1) 用户自选成员优先；否则从（世代筛选后的）池里推一位最有缘的
+  let idol = null;
+  if (user.pickedIdol) idol = MEMBERS.find(m => m.n === user.pickedIdol);
+  if (!idol){
+    const pool = getPool(false);
+    const scores = scoreAll(user, pool.length ? pool : MEMBERS);
+    idol = scores[0].idol;
+  }
+
+  // 2) 双方 60 甲子日柱（1900-01-01 = 甲戌日）
+  const a = dayIndex(user.y, user.m, user.d);
+  const [iy, im, id] = idol.b.split('-').map(Number);
+  const b = dayIndex(iy, im, id);
+
+  // 3) 日支六合判定：子丑/寅亥/卯戌/辰酉/巳申/午未 → 两支相加为 1 或 13
+  const yukhap = ((a % 12) + (b % 12)) % 12 === 1;
+  const adult  = ageOf(iy, im, id) >= 18;
+
+  // 4) romance 分支 = 六合 且 成年；否则 normal 分支
   const romance = yukhap && adult;
-  const idx = romance ? (a+b) % PAST_ROMANCE.length : (a*31 + b*17) % PAST_NORMAL.length;
-  const story = romance ? PAST_ROMANCE[idx] : PAST_NORMAL[idx];
-  return { idol, story, romance };
+
+  // 5) 抽卡：恋爱池用 (a+b) % 5；普通池用质数散列 (a*31 + b*17) % 23
+  const idx = romance
+    ? ((a + b) % PAST_ROMANCE.length + PAST_ROMANCE.length) % PAST_ROMANCE.length
+    : ((a * 31 + b * 17) % PAST_NORMAL.length + PAST_NORMAL.length) % PAST_NORMAL.length;
+
+  const card = romance ? PAST_ROMANCE[idx] : PAST_NORMAL[idx];
+
+  return {
+    idol,
+    story: card,          // { t 标题, s 故事, tr 转世痕迹, la 前世遗言 }
+    romance,
+    yukhap,
+    adult,
+    index: idx,
+    branch: romance ? '情债' : '日常'
+  };
 }
 
 /* ================================================================
- * 气质档案（10 维度一键生成）
+ * 气质档案 · 四段式创作框架（意象原型 / 反差 / 圈子定位 / 舞台方向）
  * ================================================================ */
+/* ① 专属意象原型 */
+const ARCHETYPE = [
+  ['山间晚风','像傍晚从山谷里漫出来的风，路过谁都不出声，但谁都记得那阵凉'],
+  ['旧收音机','表面掉漆，转起来却还能放出干净的声音，有种被用旧的温柔'],
+  ['未拆封的信','还没被打开，所以什么都有可能，连笔迹都是新的'],
+  ['玻璃温室','外面风雨无关，里面恒温，养着几盆不肯轻易给别人看的花'],
+  ['深夜便利店','永远亮着灯，不热情也不拒绝，随时能做你临时的落脚点'],
+  ['晒过的棉被','朴素但踏实，靠近就有一股太阳留下的、让人放松的味道'],
+  ['手抄歌词本','字不算好看，但每一行都认真，翻开来能闻见当时的心情'],
+  ['生锈的钥匙','看着不起眼，却能打开一扇别人找不到门的房间']
+];
+/* ② 对外 & 私下的反差 */
+const CONTRAST = [
+  '对外话不多，甚至有点冷；可一旦混熟，你会发现他私底下比谁都爱撒娇。',
+  '人前总是一副"我没事"的样子，实际比谁都敏感，夜里会反复回想白天说过的话。',
+  '看起来随性散漫，其实有自己一套很硬的秩序，谁都别想随便打乱。',
+  '对外是气氛担当，私下却需要大量独处时间充电，热闹结束比谁都累。',
+  '表面上什么都不在乎，其实把重要的小事一件件都记着，从不说破。',
+  '台上比谁都炸，台下安静得像换了个人，喜欢坐在角落看别人闹。'
+];
+/* ③ 家族圈子里的趣味虚拟定位 */
+const CIRCLE_ROLE = [
+  '家族群里那个"默默记歌词"的人，谁忘词他都能接上。',
+  '排练室的守门人——最后一个走，顺手关灯关空调。',
+  '团综里负责"冷场救场"的那位，尴尬时他一句话就把场子圆回来。',
+  '大家公认的"点单机"，吃什么、去哪玩，永远听他的。',
+  '深夜陪聊专员，凌晨三点还在线，谁崩溃他都在。',
+  '物料堆里的考据党，年份、场次、服化道他门儿清。'
+];
+/* ④ 适配的氛围感舞台方向 */
+const STAGE_DIR = [
+  '适合一盏追光、一把吉他的小舞台，唱到第二段可以停下来跟观众聊两句。',
+  '适合户外 sunset 舞台，风把头发吹乱也没关系，那种松弛感正是他的舞台。',
+  '适合暗场里的一束顶光，安静站定，只用气息和咬字把人钉在原地。',
+  '适合热闹的群舞，他站 C 位时不抢，退到边上时反而更亮。',
+  '适合有故事感的舞台——比如下雨天、末班车、空教室，他能把情绪演透。',
+  '适合不插电的 acoustic 场，吉他有点走音反而更动人。'
+];
+
 function buildProfile(user){
   const el = dayElement(user.y,user.m,user.d);
   const ani = animalOf(user.y,user.m,user.d);
-  const zi = zodiacOf(user.m,user.d);
-  const ln = lifeNumber(user.y,user.m,user.d);
-  const color = LUCKY_COLOR[el];
-  // 本命 top3 + 互补哥哥
-  const scored = scoreAll(user, MEMBERS);
-  const top1 = scored[0].idol;
-  const comp = scored[scored.length-1].idol; // 相反端 as 互补
-  // 本周守护哥哥：hash(用户日 + 本周一)
-  const now = new Date();
-  const monday = new Date(now); monday.setDate(now.getDate() - ((now.getDay()+6)%7));
-  const seed = hash(user.y+'-'+user.m+'-'+user.d+'-'+monday.toDateString());
-  const guard = MEMBERS[seed % MEMBERS.length];
-  // 签名歌：按五行给一首推荐（示例标签）
-  const songs = {0:"王源《姐姐》",1:"刘耀文《样》",2:"马嘉祺《无尽的》",3:"易烊千玺《我》",4:"宋亚轩《Dream Boy》"};
+  const zodIdx = zodiacIndex(user.m,user.d);
+  const zi = ZODIAC[zodIdx];
+  const zEl = ZODIAC_EL[zodIdx];
+  const seed = hash(user.y+'-'+user.m+'-'+user.d+'-'+(user.mbti||'X'));
+  const arch = ARCHETYPE[seed % ARCHETYPE.length];
+  const contrast = CONTRAST[(seed>>3) % CONTRAST.length];
+  const circle = CIRCLE_ROLE[(seed>>6) % CIRCLE_ROLE.length];
+  const stage = STAGE_DIR[(seed>>9) % STAGE_DIR.length];
 
-  return [
-    {label:"六十甲子日柱", value:`第 ${dayIndex(user.y,user.m,user.d)+1} 位`},
-    {label:"日主五行", value: ELEMENTS[el]+'性'},
-    {label:"生肖", value: ANIMALS[ani]+'·生'},
-    {label:"星座", value: zi+'座'},
-    {label:"生命灵数", value: ln+' 号'},
-    {label:"幸运应援色", value: color},
-    {label:"本命哥哥", value: top1.n+' · '+top1.g},
-    {label:"性格互补", value: comp.n+' · '+comp.g},
-    {label:"本周守护", value: guard.n+' · '+guard.g},
-    {label:"今日应援歌", value: songs[el]}
-  ];
+  return {
+    archetype: arch[0], archetypeDesc: arch[1],
+    contrast, circle, stage,
+    element: ELEMENTS[el], animal: ANIMALS[ani],
+    zodiac: zi + '座', zodiacEl: zEl,
+    mbti: user.mbti || '未填',
+    color: LUCKY_COLOR[el]
+  };
 }
 
 /* ================================================================
@@ -963,24 +1461,75 @@ function startTest(key){
   state.test = key;
   const titles = {
     love:    '天生缘分 · 填一行信息',
-    past:    '前世关系 · 填一行信息',
+    past:    '前世关系 · 选一位成员',
     best:    '本命 Top3 · 填一行信息',
     profile: 'TF 气质档案 · 填一行信息'
   };
   const btnTexts = {
-    love:    '查我的天生缘分',
-    past:    '查我的前世关系',
+    love:    '查我的天生缘分 Top3',
+    past:    '查我们的前世关系',
     best:    '查我的本命 Top3',
     profile: '生成我的 TF 气质档案'
   };
   $('input-title').textContent = titles[key];
   $('submit-text').textContent = btnTexts[key];
+  // 只在前世测试显示"选成员"下拉
+  $('idol-pick-wrap').style.display = (key === 'past') ? 'block' : 'none';
+  if (key === 'past') buildIdolSelect();
   go('input');
+}
+function buildIdolSelect(){
+  const sel = $('f-idol');
+  if (sel.options.length > 1) return; // 已经填过
+  // 按代次分组
+  const byEra = {1:'一代 TFBOYS', 2:'二代 时代少年团', 3:'三代 登陆少年+TF_ING', 4:'四代 练习生'};
+  for (const era of [1,2,3,4]){
+    const group = document.createElement('optgroup');
+    group.label = byEra[era];
+    MEMBERS.filter(m => m.era === era).forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.n;
+      opt.textContent = m.n + '（' + m.g + '）';
+      group.appendChild(opt);
+    });
+    sel.appendChild(group);
+  }
 }
 function goInput(){ go('home'); scrollToTests(); }
 function retest(){ go('input'); }
 
 /* ---------- 输入页 ---------- */
+/* ---------- 世代筛选 ---------- */
+let eraSelection = new Set([1,2,3,4]);
+function bindEraGrid(){
+  document.querySelectorAll('.era-btn').forEach(btn => {
+    btn.onclick = () => {
+      const era = Number(btn.dataset.era);
+      if (eraSelection.has(era)) eraSelection.delete(era);
+      else eraSelection.add(era);
+      btn.classList.toggle('active', eraSelection.has(era));
+      // 如果一个都没选，提示
+      if (eraSelection.size === 0){ toast('至少选一个世代哦'); eraSelection.add(era); btn.classList.add('active'); }
+    };
+  });
+  $('era-all').onclick = () => {
+    eraSelection = new Set([1,2,3,4]);
+    document.querySelectorAll('.era-btn').forEach(b => b.classList.add('active'));
+    toast('已选全部世代');
+  };
+}
+/* 根据世代 + 成年约束过滤成员池 */
+function getPool(requireAdult){
+  let pool = MEMBERS.filter(m => eraSelection.has(m.era));
+  if (requireAdult) pool = pool.filter(x => ageOf(...x.b.split('-').map(Number)) >= 18);
+  return pool.length ? pool : MEMBERS.filter(m => eraSelection.has(m.era));
+}
+function eraLabel(){
+  if (eraSelection.size === 4) return '全部世代';
+  return ['一代','二代','三代','四代']
+    .filter((_,i) => eraSelection.has(i+1)).join(' + ');
+}
+
 function buildMbtiGrid(){
   const grid = $('mbti-grid');
   MBTI_LIST.forEach(t => {
@@ -1028,12 +1577,13 @@ function submitForm(){
   if (!validateForm()) return;
   const name = $('f-name').value.trim();
   const b = readBirth();
-  state.user = { name, y:b.y, m:b.m, d:b.d, mbti: picked==='UNKNOWN' ? null : picked };
+  const pickedIdol = state.test === 'past' ? ($('f-idol').value || null) : null;
+  state.user = { name, y:b.y, m:b.m, d:b.d, mbti: picked==='UNKNOWN' ? null : picked, pickedIdol };
   go('loading');
   $('loading-text').textContent = {
-    love:'正在推算你和哥哥的缘分…',
+    love:'正在排序你的 Top3 缘分…',
     past:'正在翻开前世那一页…',
-    best:'正在排序 36 位哥哥…',
+    best:'正在排序成员池…',
     profile:'正在展开你的 10 维命盘…'
   }[state.test];
   setTimeout(renderResult, 1800);
@@ -1052,29 +1602,127 @@ function renderResult(){
   go('result');
 }
 
+/* ---------- Top3 详细文案 · 双方标签驱动（不写死单方模板）---------- */
+/* 五行意象：元素的画面特征（双方都读） */
+const EL_IMAGE = {
+  0:{name:'木',img:'抽枝的生长感',verb:'往上有劲地长'},
+  1:{name:'火',img:'暖而亮的光',verb:'先热起来再说'},
+  2:{name:'土',img:'稳而包容的承载',verb:'把事兜住'},
+  3:{name:'金',img:'清冽而利落的质感',verb:'三下五除二理清'},
+  4:{name:'水',img:'柔和而能绕的流动',verb:'顺着缝隙渗过去'}
+};
+const SAJU_REL_TITLE = {
+  idolFeedsMe:'他托住你', meFeedsIdol:'你托住他',
+  same:'同一种气息', clash:'节奏差异偏大'
+};
+/* 动态生成：读取 你五行 × 他五行 */
+function loveSajuSentence(r){
+  const ue = EL_IMAGE[r.uEl], ie = EL_IMAGE[r.iEl];
+  const rel = r.sRel;
+  let text;
+  if (rel === 'idolFeedsMe'){
+    text = `${r.idol.n}身上那股「${ie.img}」，刚好补上你缺少的部分。你容易钻牛角尖的时刻，他那种${ie.verb}的处理方式，会让你觉得事情没那么难。`;
+  } else if (rel === 'meFeedsIdol'){
+    text = `你身上那股「${ue.img}」，正好托住${r.idol.n}的节奏。他往前冲的时候，你负责把后方稳住——这段关系里的温度是你定的。`;
+  } else if (rel === 'same'){
+    text = `你和${r.idol.n}都是${ue.name}性的调子：${ue.verb}。喜欢的歌、受不了的小事、甚至翻白眼的时机，都像同一张清单。`;
+  } else {
+    text = `你的${ue.name}（${ue.verb}）和他的${ie.name}（${ie.verb}）节奏不太一样。差异带来不一样的火花，相处像两种乐器即兴合奏。`;
+  }
+  return {title:`${ue.name} × ${ie.name} · ${SAJU_REL_TITLE[rel]}`, text};
+}
+/* 生肖意象：双方生肖 + 关系 */
+const LOVE_TTI_DESC = {
+  samhap: '{meTti}与{idolTti}在民俗意象里属同一组（三合），初见就有种"好像认识很久"的熟悉感。',
+  yukhap: '{meTti}与{idolTti}是民俗里的六合组，像两块互补的拼图，空缺刚好对得上。',
+  same:   '你和{idolTti}都是{meTti}生，想法常常同步到有点好笑，连沉默的节奏都重合。',
+  normal: '{meTti}与{idolTti}没有特别的民俗组合，相处像慢热的朋友——见第三面之后才开始上头。',
+  chung:  '{meTti}与{idolTti}在生肖里正对（相冲），看似针锋相对，其实互相觉得对方新鲜。'
+};
+function loveTtiSentence(r){
+  return LOVE_TTI_DESC[r.tRel]
+    .replace(/\{meTti\}/g, ANIMALS[r.uAni])
+    .replace(/\{idolTti\}/g, ANIMALS[r.iAni]);
+}
+/* MBTI：双方类型都读；未知也给中位表述 */
+function loveMbtiSentence(r,u){
+  const me = u.mbti, him = r.idol.m;
+  if (!me && !him) return '你俩的类型都还没填，这段关系的下一步，大概就是慢慢把彼此摸清楚。';
+  if (!me)  return `你还没填 MBTI，${r.idol.n}是${him}。可以想象：一个慢慢观察的人，遇上一个${him[0]==='E'?'先开口':'先安静'}的伙伴。`;
+  if (!him) return `${r.idol.n}的类型还没公开。你的${me}遇上"未知"，反而多了点值得琢磨的空间。`;
+  const hit = (BEST[me] && BEST[me].includes(him)) || (BEST[him] && BEST[him].includes(me));
+  if (hit) return `${me}与${him}是常被放在一起聊的灵魂搭档：一个眼神，就知道对方下一句要讲什么梗。`;
+  if (me[1] === him[1]) return `你们在感知方式上一致（都是${me[1]==='S'?'实感':'直觉'}派），不用解释太多，默契是自带的。`;
+  return `你是${me}，他是${him}——气质差异不小，但也正是你们一直有新鲜话题的原因。`;
+}
+function loveDateSuggestion(r){
+  // 五行 × 五行 → 场景（简化版，20 种随 index 变）
+  const scenes = [
+    '植物园的温室','星空露营','烘焙教室','美术馆的夜场','老唱片店',
+    '海边民宿','城市天台','老巷子的糖水铺','艺术展','深夜便利店',
+    '话剧小剧场','宠物咖啡','复古游乐场','古书市场','桂花季的小公园',
+    '陶艺工作室','日落海边','手冲咖啡馆','城市观景台','水族馆',
+    '电影院最后一排','手工市集','京都风的小食堂','旧书咖啡馆','午夜便利店'
+  ];
+  return scenes[(r.uEl*5 + r.iEl) % scenes.length];
+}
+
 function renderLove(u){
-  const pool = MEMBERS.filter(x => ageOf(...x.b.split('-').map(Number))>=18);
+  const pool = getPool(true);   // 成年成员池（按世代筛选后）
   const list = scoreAll(u, pool);
-  const r = list[0];
-  const RLN = {idolFeedsMe:`{idol} 像一股{iel}的力量，正好托住了你{uel}的那部分。他能带你去你一个人到不了的地方。`,
-               meFeedsIdol:`你是{idol}的"氧气"—你的{uel}让他的{iel}越烧越旺。他台上的光，有一半是你给的。`,
-               same:`你和{idol}同是{uel}性—喜欢同样的歌、同样的小众零食、同样的恶劣冷笑话。设计初稿都一个人画的。`,
-               clash:`你和{idol}天生就是一场有张力的组合—他的{iel}和你的{uel}一碰撞，花火就自己来了。`};
-  const txt = RLN[r.sRel]
-    .replace(/\{idol\}/g, r.idol.n)
-    .replace(/\{uel\}/g, ELEMENTS[r.uEl])
-    .replace(/\{iel\}/g, ELEMENTS[r.iEl]);
+  const top3 = list.slice(0,3);
+
+  const cardHTML = top3.map((r,i)=>{
+    const rank = ['TOP 01','TOP 02','TOP 03'][i];
+    const saju = loveSajuSentence(r);
+    const tti  = loveTtiSentence(r);
+    const mbti = loveMbtiSentence(r,u);
+    const date = loveDateSuggestion(r);
+    return `
+      <div class="love-card ${i===0?'love-rank1':''}">
+        <div class="love-head">
+          <span class="top-rank">${rank}</span>
+          <div class="love-score">${r.score}<span class="unit">/100</span></div>
+        </div>
+        <h3 class="love-name">${r.idol.n}</h3>
+        <p class="love-meta">${r.idol.g} · ${r.idol.m||'MBTI 未公开'} · ${ageOf(...r.idol.b.split('-').map(Number))} 岁</p>
+
+        <div class="love-section">
+          <div class="love-section-tag">五行 · ${saju.title}</div>
+          <p>${saju.text}</p>
+        </div>
+        <div class="love-section">
+          <div class="love-section-tag">生肖 · ${ANIMALS[r.uAni]}×${ANIMALS[r.iAni]}</div>
+          <p>${tti}</p>
+        </div>
+        <div class="love-section">
+          <div class="love-section-tag">MBTI · ${u.mbti||'?'}×${r.idol.m||'?'}</div>
+          <p>${mbti}</p>
+        </div>
+        <div class="love-date">
+          <span class="love-date-tag">🌸 第一次约会推荐</span>
+          <span class="love-date-place">${date}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
   return `
     <div class="result-card">
       <div class="result-header">
-        <p class="r-eyebrow">天生缘分 · 第 ${r.score} 分</p>
-        <h2>${u.name} 的天生缘分<br/>是 <span class="accent-name">${r.idol.n}</span></h2>
+        <p class="r-eyebrow">天生缘分 · Top3</p>
+        <h2>${u.name} 的天生缘分 Top3<br/>是 <span class="accent-name">${top3[0].idol.n}</span></h2>
+        <p class="score-label" style="margin-top:14px;">意象契合度排序 · 仅供娱乐想象</p>
+        <p class="pool-note">本次匹配池：${eraLabel()}（成年成员）</p>
       </div>
-      <div class="score-big">${r.score}<span class="unit">/100</span></div>
-      <p class="score-label">${r.idol.g} · ${r.idol.m||'未公开'} · ${ageOf(...r.idol.b.split('-').map(Number))} 岁</p>
+      <div class="love-grid">${cardHTML}</div>
       <div class="r-body">
-        <p>${txt}</p>
-        <p style="color:var(--muted);font-size:13px;">· 本次计算仅在成年成员池（18+）里排序，和你当前的 MBTI、日柱五行、生肖、月令综合打分。</p>
+        <p style="color:var(--muted);font-size:13px;text-align:center;">
+          契合度由五个意象维度合成：五行意象互补 30 · 干支合/三合意象 20 · 月令季节气质 15 · MBTI 气质共鸣 15 · 太阳星座元素 12 · 生肖民俗意象 8。
+        </p>
+        <p class="disclaimer-mini">
+          本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。
+        </p>
       </div>
     </div>
   `;
@@ -1082,32 +1730,68 @@ function renderLove(u){
 
 function renderPast(u){
   const r = pastRel(u);
-  const story = r.story.s.replace(/\{idol\}/g, r.idol.n);
+  const c = r.story;
+  const story = c.s.replace(/\{idol\}/g, r.idol.n);
+  const trace = c.tr.replace(/\{idol\}/g, r.idol.n);
+  const last  = c.la.replace(/\{idol\}/g, r.idol.n);
+  const idolAge = ageOf(...r.idol.b.split('-').map(Number));
+  const [iy,im,id] = r.idol.b.split('-').map(Number);
+  const uEl = dayElement(u.y,u.m,u.d), iEl = dayElement(iy,im,id);
+  const uAni = animalOf(u.y,u.m,u.d), iAni = animalOf(iy,im,id);
+  const chosen = u.pickedIdol ? '你自己挑的' : '系统推的最有缘那位';
+
   return `
     <div class="result-card">
       <div class="result-header">
-        <p class="r-eyebrow">前世关系 · ${r.romance?'情债分支':'日常分支'}</p>
+        <p class="r-eyebrow">前世关系 · ${r.branch}分支</p>
         <h2>${u.name} 和 <span class="accent-name">${r.idol.n}</span><br/>的前世是…</h2>
+        <p class="score-label" style="margin-top:14px;">${r.idol.g} · ${r.idol.m||'MBTI 未公开'} · ${idolAge} 岁 · ${chosen}</p>
       </div>
-      <div style="text-align:center;font-family:var(--font-display);font-size:28px;font-weight:900;margin:16px 0 24px;color:var(--accent);">
-        「${r.story.t}」
-      </div>
-      <div class="r-body">
+
+      <div class="past-title">「${c.t}」</div>
+      <div class="r-body" style="margin-top:0;padding-top:0;border-top:none;">
         <p>${story}</p>
-        <p style="color:var(--muted);font-size:13px;">· 判定依据：你和 ${r.idol.n} 的日支${r.romance?'构成六合':'无六合关系'}，所以走${r.romance?'情债':'日常'}卡池。</p>
+        <p class="disclaimer-mini" style="margin-top:12px;">架空娱乐创作｜意象仅供想象</p>
       </div>
+
+      <div class="past-trace">
+        <div class="past-detail-tag">🌀 转世痕迹 · 今生为什么会对他有这种感觉</div>
+        <p>${trace}</p>
+      </div>
+
+      <div class="past-last">
+        <div class="past-last-tag">💌 前世没来得及说出口的那句话</div>
+        <p class="past-last-text">${last}</p>
+      </div>
+
+      <div class="past-detail">
+        <div class="past-detail-tag">判定依据</div>
+        <div class="past-pills">
+          <span class="past-pill">你 · ${ELEMENTS[uEl]}性 · ${ANIMALS[uAni]}生</span>
+          <span class="past-pill">他 · ${ELEMENTS[iEl]}性 · ${ANIMALS[iAni]}生</span>
+          <span class="past-pill">日支${r.yukhap?'六合 ✓':'未六合'}</span>
+          <span class="past-pill">${r.adult?'成年':'未成年'}</span>
+        </div>
+        <p style="margin-top:12px;color:var(--muted);font-size:13.5px;line-height:1.65;">
+          先把两人生日换算成 60 甲子日柱，取日支判定是否六合；六合且成年走「情债」池（${PAST_ROMANCE.length} 张），否则走「日常」池（${PAST_NORMAL.length} 张）。抽卡用散列 <code>(a×31+b×17) % ${PAST_NORMAL.length}</code>，本次落在第 <b>${r.index + 1}</b> 张。故事、转世痕迹、遗言三份文案随 index 联动。
+        </p>
+      </div>
+
+      <p class="pool-note">本次匹配池：${eraLabel()}</p>
+      <p class="disclaimer-mini">仅借用传统干支符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。想换个人测？点下面「重新填信息」。</p>
     </div>
   `;
 }
 
 function renderBest(u){
-  const list = scoreAll(u, MEMBERS);
+  const list = scoreAll(u, getPool(false));
   const top3 = list.slice(0,3);
   return `
     <div class="result-card">
       <div class="result-header">
-        <p class="r-eyebrow">本命 Top3 · 36 人全家族排序</p>
+        <p class="r-eyebrow">本命 Top3 · 意象契合排序</p>
         <h2>${u.name} 的本命 Top3</h2>
+        <p class="pool-note">本次匹配池：${eraLabel()}</p>
       </div>
       <div class="top3-grid">
         ${top3.map((r,i)=>`
@@ -1120,33 +1804,55 @@ function renderBest(u){
         `).join('')}
       </div>
       <div class="r-body">
-        <p>你的 Top1 本命是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。你俩的日柱五行是${['相同','他生你（他滋养你）','你生他（你陪伴他）','相克（吸引力拉满）'][['same','idolFeedsMe','meFeedsIdol','clash'].indexOf(top3[0].sRel)]}的关系。</p>
-        <p style="color:var(--muted);font-size:13px;">· 36 位哥哥全部参与排序 · 未成年成员自动归入"友情向"叙事。</p>
+        <p>你的 Top1 是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。你俩的五行意象呈现「${['同一种气息','他滋养你','你陪伴他','节奏差异偏大，会带来不一样的火花'][['same','idolFeedsMe','meFeedsIdol','clash'].indexOf(top3[0].sRel)]}」的调性。</p>
+        <p style="color:var(--muted);font-size:13px;">· 契合度仅为意象创作维度的合成参考，不是严谨运算。</p>
+        <p class="disclaimer-mini">本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。</p>
       </div>
     </div>
   `;
 }
 
 function renderProfile(u){
-  const items = buildProfile(u);
-  const colorClass = ['v2','v3','v4','v5',''];
+  const p = buildProfile(u);
   return `
     <div class="result-card">
       <div class="result-header">
-        <p class="r-eyebrow">TF 气质档案 · 10 维度一键生成</p>
-        <h2><span class="accent-name">${u.name}</span><br/>的峰峻命盘档案</h2>
+        <p class="r-eyebrow">气质档案 · 意象创作</p>
+        <h2><span class="accent-name">${u.name}</span><br/>的气质档案</h2>
+        <p class="score-label" style="margin-top:14px;">
+          ${p.element}性 · ${p.animal}生 · ${p.zodiac}（${p.zodiacEl}象） · ${p.mbti}
+        </p>
       </div>
+
+      <div class="arch-block">
+        <div class="arch-icon">🪐</div>
+        <div class="arch-body">
+          <div class="arch-name">${p.archetype}</div>
+          <p class="arch-desc">${p.archetypeDesc}</p>
+        </div>
+      </div>
+
       <div class="profile-grid">
-        ${items.map((it,i)=>`
-          <div class="profile-cell ${colorClass[i%colorClass.length]}">
-            <div class="pc-label">${it.label}</div>
-            <div class="pc-value">${it.value}</div>
-          </div>
-        `).join('')}
+        <div class="profile-cell v2">
+          <div class="pc-label">🫂 对外 & 私下的反差</div>
+          <div class="pc-text">${p.contrast}</div>
+        </div>
+        <div class="profile-cell v3">
+          <div class="pc-label">🧩 圈子里的虚拟定位</div>
+          <div class="pc-text">${p.circle}</div>
+        </div>
+        <div class="profile-cell v4">
+          <div class="pc-label">🎤 适配的氛围舞台</div>
+          <div class="pc-text">${p.stage}</div>
+        </div>
+        <div class="profile-cell v5">
+          <div class="pc-label">🎨 你的幸运应援色</div>
+          <div class="pc-text" style="font-family:var(--font-display);font-size:20px;font-weight:900;">${p.color}</div>
+        </div>
       </div>
+
       <div class="r-body">
-        <p>这是只有你拥有的一张峰峻命盘 · 把这张图长按保存，发到微博超话或闺蜜群，一起看看谁的本命和你最像。</p>
-        <p style="color:var(--muted);font-size:13px;">· 所有维度由生日 + MBTI 后台推算而来 · 不用答题。</p>
+        <p class="disclaimer-mini">仅为趣味意象创作，非真实性格测评 · 借用干支、五行、星座符号做的一场想象游戏。</p>
       </div>
     </div>
   `;
@@ -1164,6 +1870,7 @@ function shareLink(){
 /* init */
 buildMbtiGrid();
 bindInputs();
+bindEraGrid();
 </script>
 
 </body>
