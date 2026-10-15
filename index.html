@@ -212,6 +212,48 @@
   .feature.v2 .feature-mark { background: #f0e9ff; color: var(--secondary); }
   .feature.v3 .feature-mark { background: #fff2d6; color: #c48a00; }
   .feature.v4 .feature-mark { background: #ddf6e1; color: #44a56a; }
+  .feature.v5 .feature-mark { background: #e0f6fa; color: #0e7490; }
+
+  /* 首页测试卡：flex 居中，第 5 项不会落单 */
+  .tests-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  .tests-grid > .feature { flex: 0 1 calc(25% - 15px); min-width: 220px; }
+  @media (max-width: 1100px){ .tests-grid > .feature { flex-basis: calc(50% - 10px); } }
+  @media (max-width: 560px){ .tests-grid > .feature { flex-basis: 100%; } }
+
+  /* 三方合盘 · 输入槽位 */
+  .trio-slot {
+    background: #fffdfb; border: 2px solid var(--border); border-radius: 14px;
+    padding: 14px; margin-bottom: 12px; box-shadow: 4px 4px 0 var(--border);
+  }
+  .trio-slot-head {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+    letter-spacing: .08em; color: var(--muted); margin-bottom: 8px;
+  }
+  .trio-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+  .trio-tab {
+    padding: 8px 16px; border-radius: 999px; border: 2px solid var(--border);
+    background: #fff; font-weight: 800; font-size: 13px; cursor: pointer; min-height: 40px;
+    transition: transform .12s ease;
+  }
+  .trio-tab:active { transform: translateY(2px); }
+  .trio-tab.active { background: var(--accent); color: #fff; }
+
+  /* 三方合盘 · 结果 */
+  .trio-figure { display: flex; justify-content: center; margin: 4px 0 24px; }
+  .trio-svg { width: 100%; max-width: 430px; height: auto; }
+  .trio-edges { display: grid; gap: 12px; }
+  .trio-edge {
+    background: #fff; border: 2px solid var(--border); border-radius: 14px;
+    padding: 14px 16px; box-shadow: 4px 4px 0 var(--border);
+  }
+  .trio-edge-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .trio-edge-no { font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: var(--muted); }
+  .trio-edge-tag {
+    font-size: 11.5px; font-weight: 900; padding: 3px 10px;
+    border-radius: 999px; border: 2px solid var(--border);
+  }
+  .trio-edge-name { font-weight: 800; font-size: 14.5px; }
+  .trio-edge p { font-size: 13.5px; color: #4a423e; }
   .feature h3 { font-size: 24px; margin-bottom: 10px; }
   .feature p { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0; font-weight: 600; }
   .feature .f-cta {
@@ -795,6 +837,17 @@
   }
   .back-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--border); }
 
+  /* ================================================================
+   * 响应式自适应
+   * ================================================================ */
+  /* 兜底：装饰光晕/星星的负偏移可能造成横向滚动条 */
+  html, body { overflow-x: hidden; }
+  img, svg, video { max-width: 100%; }
+  /* 移动端动态视口：避开地址栏伸缩导致的 100vh 跳动 */
+  @supports (min-height: 100dvh) {
+    .screen { min-height: 100dvh; }
+  }
+
   @media (max-width: 920px) {
     .grid-3, .grid-4 { grid-template-columns: 1fr; }
     .star.s1, .star.s3 { display: none; }
@@ -802,6 +855,67 @@
     .hero { padding-block: 72px; }
     .mbti-grid { grid-template-columns: repeat(2, 1fr); }
     .input-wrap { padding: 24px; margin-top: 20px; }
+    /* 触感阴影收窄，避免窄屏被裁切 */
+    .feature, .result-card, .input-wrap, .top-item, .profile-cell { box-shadow: 6px 6px 0 var(--border); }
+    .love-card { box-shadow: 5px 5px 0 var(--border); }
+    /* 世代筛选 4 列 → 2 列 */
+    .era-grid { grid-template-columns: repeat(2, 1fr); }
+    /* stats 光晕缩小并内收 */
+    .stats-wrap::before { width: 170px; height: 170px; right: -40px; top: -50px; }
+    .stats-wrap::after  { width: 130px; height: 130px; left: -25px; bottom: -40px; }
+    .result-card { max-width: 100%; }
+  }
+
+  @media (max-width: 560px) {
+    :root { --gutter: 16px; }
+    .topnav { padding: 14px var(--gutter); }
+    .brand { font-size: 18px; gap: 8px; }
+    .brand .mark { width: 32px; height: 32px; box-shadow: 2px 2px 0 var(--border); }
+    .pill { font-size: 10px; padding: 5px 10px; letter-spacing: 0.03em; }
+
+    .hero { padding-block: 48px; }
+    .hero-title-simple { font-size: clamp(26px, 8vw, 34px); }
+    .hero .lead { font-size: 14px; margin-top: 16px; }
+    .hero-cta { margin-top: 24px; }
+    .section { padding-block: 40px; }
+
+    /* 触摸目标 ≥ 50px */
+    .btn { padding: 15px 20px; font-size: 14px; min-height: 50px; }
+    .hero-cta .btn { width: 100%; max-width: 300px; }
+    .feature { padding: 20px; }
+    .feature .f-cta { font-size: 13px; }
+
+    .input-wrap { padding: 20px 18px; border-radius: 20px; box-shadow: 5px 5px 0 var(--border); }
+    .input-wrap h2 { font-size: 20px; }
+    .input-wrap .lead-sm { font-size: 13px; margin-bottom: 20px; }
+    .birth-row { grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; }
+    .mbti-grid { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    .era-grid { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+
+    .result-card { padding: 22px 18px; border-radius: 20px; box-shadow: 5px 5px 0 var(--border); }
+    .result-header { margin-bottom: 22px; }
+    .love-card { padding: 18px; box-shadow: 5px 5px 0 var(--border); }
+    .love-grid { gap: 26px; }
+    .top3-grid, .profile-grid { grid-template-columns: 1fr; }
+    .stat .stat-num { font-size: 38px; }
+    .stat .stat-unit { font-size: 18px; }
+    .past-title { font-size: 20px; }
+    .pagefoot { padding: 32px var(--gutter) 24px; }
+    .disclaimer-mini, .pool-note { font-size: 11px; }
+    /* 三方合盘小屏 */
+    .trio-slot { padding: 12px; box-shadow: 3px 3px 0 var(--border); }
+    .trio-tab { padding: 8px 12px; font-size: 12.5px; }
+    .trio-edge { padding: 12px 14px; box-shadow: 3px 3px 0 var(--border); }
+    .trio-edge p { font-size: 13px; }
+  }
+
+  @media (max-width: 380px) {
+    :root { --gutter: 12px; }
+    .brand span:last-child { display: none; }
+    .btn { padding: 13px 14px; font-size: 13px; }
+    .result-card, .input-wrap { padding: 18px 14px; }
+    .love-card { padding: 16px; }
+    .birth-row { grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; }
   }
 </style>
 </head>
@@ -839,10 +953,10 @@
   <section class="section" id="tests">
     <div class="container">
       <div style="text-align:center; max-width: 580px; margin: 0 auto 48px;">
-        <p class="eyebrow" style="background: #f0e9ff; color: var(--secondary); border-color: var(--secondary);">四项测试</p>
+        <p class="eyebrow" style="background: #f0e9ff; color: var(--secondary); border-color: var(--secondary);">五项测试</p>
         <h2>从日柱、五行、MBTI<br/>出发的四段相遇</h2>
       </div>
-      <div class="grid-4" style="gap: 20px;">
+      <div class="tests-grid">
         <button class="feature v1" onclick="pickTest('love')">
           <div class="feature-mark">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
@@ -874,6 +988,14 @@
           <h3>TF 气质档案</h3>
           <p>五行·生肖·星座·幸运应援色·本周守护成员 · 10+ 维度一键生成。</p>
           <span class="f-cta">生成气质档案 →</span>
+        </button>
+        <button class="feature v5" onclick="pickTest('trio')">
+          <div class="feature-mark">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="18" r="3"/><circle cx="19" cy="18" r="3"/><path d="M10.5 7.5 6.5 15.5M13.5 7.5 17.5 15.5M8 18h8"/></svg>
+          </div>
+          <h3>三方合盘</h3>
+          <p>三个人一张五行关系图 —— 你和朋友、你和两位成员，任选组合，三条连线各有解读。</p>
+          <span class="f-cta">查三方合盘 →</span>
         </button>
       </div>
     </div>
@@ -940,7 +1062,7 @@
       </div>
 
       <!-- 世代筛选（多选） -->
-      <div class="form-group">
+      <div class="form-group" id="era-wrap">
         <label class="field-label">想匹配哪些世代（可多选）</label>
         <div class="era-grid" id="era-grid">
           <button type="button" class="era-btn active" data-era="1">一代</button>
@@ -959,6 +1081,16 @@
         <p class="disclaimer-mini" style="text-align:left;margin-top:8px;">
           成员的 MBTI 为粉丝据公开表现推测整理，公司从未官方公布，可能存在错漏，仅供娱乐。
         </p>
+      </div>
+
+      <!-- 三方合盘：另外两位（每位可选「成员」或「朋友」） -->
+      <div class="form-group" id="trio-wrap" style="display:none;">
+        <label class="field-label">另外两位是谁</label>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:600;">
+          第 1 位是你自己（用上方信息）。下面两位，每位都能选「成员」或「另一位朋友」——可以自由组合。
+        </p>
+        <div id="trio-slots"></div>
+        <p class="form-error" id="trio-error">请把两位的信息填完整</p>
       </div>
 
       <!-- 测前世时才显示：选个想测的成员（可选） -->
@@ -1501,19 +1633,27 @@ function startTest(key){
     love:    '天生缘分 · 填一行信息',
     past:    '前世关系 · 选一位成员',
     best:    '本命 Top3 · 填一行信息',
-    profile: 'TF 气质档案 · 填一行信息'
+    profile: 'TF 气质档案 · 填一行信息',
+    trio:    '三方合盘 · 填三份信息'
   };
   const btnTexts = {
     love:    '查我的天生缘分 Top3',
     past:    '查我们的前世关系',
     best:    '查我的本命 Top3',
-    profile: '生成我的 TF 气质档案'
+    profile: '生成我的 TF 气质档案',
+    trio:    '画出我们的关系图'
   };
   $('input-title').textContent = titles[key];
   $('submit-text').textContent = btnTexts[key];
   // 只在前世测试显示"选成员"下拉
   $('idol-pick-wrap').style.display = (key === 'past') ? 'block' : 'none';
   if (key === 'past') buildIdolSelect();
+  // 三方合盘：显示双槽位，隐藏世代筛选（成员是手动选的）
+  const isTrio = (key === 'trio');
+  $('trio-wrap').style.display  = isTrio ? 'block' : 'none';
+  $('era-wrap').style.display   = isTrio ? 'none'  : 'block';
+  if (isTrio) buildTrioSlots();
+  validateForm();
   go('input');
 }
 function buildIdolSelect(){
@@ -1593,11 +1733,122 @@ function readBirth(){
   return {y,m,d};
 }
 function validateForm(){
+  if (state.test === 'trio') return validateTrio();
   const name = $('f-name').value.trim();
   const birth = readBirth();
   const full = $('f-year').value.length===4 && $('f-month').value && $('f-day').value;
   $('birth-error').classList.toggle('show', full && birth===false);
   const ok = !!(name && birth && picked);
+  $('submit-btn').disabled = !ok;
+  return ok;
+}
+
+/* ---------- 三方合盘：槽位构建 / 采集 / 校验 ---------- */
+const TRIO_ERA_NAME = {1:'一代 TFBOYS',2:'二代 时代少年团',3:'三代 登陆少年+TF_ING',4:'四代 练习生'};
+function buildTrioSlots(){
+  const box = $('trio-slots');
+  if (box.dataset.built) return;
+  const defaults = ['idol','person'];   // 默认：一位成员 + 一位朋友
+  box.innerHTML = '';
+  [0,1].forEach(i => {
+    const slot = document.createElement('div');
+    slot.className = 'trio-slot';
+    slot.dataset.kind = defaults[i];
+    slot.innerHTML =
+      '<div class="trio-slot-head">第 ' + (i+2) + ' 位</div>' +
+      '<div class="trio-tabs">' +
+        '<button type="button" class="trio-tab' + (defaults[i]==='idol'?' active':'') + '" data-kind="idol">成员</button>' +
+        '<button type="button" class="trio-tab' + (defaults[i]==='person'?' active':'') + '" data-kind="person">朋友</button>' +
+      '</div>' +
+      '<div class="trio-pane" data-pane="idol" style="display:' + (defaults[i]==='idol'?'block':'none') + '">' +
+        '<select class="field trio-idol"></select>' +
+      '</div>' +
+      '<div class="trio-pane" data-pane="person" style="display:' + (defaults[i]==='person'?'block':'none') + '">' +
+        '<input class="field trio-name" type="text" maxlength="10" placeholder="朋友的昵称" />' +
+        '<div class="birth-row" style="margin:8px 0 0">' +
+          '<input class="field trio-y" inputmode="numeric" maxlength="4" placeholder="年" />' +
+          '<input class="field trio-mo" inputmode="numeric" maxlength="2" placeholder="月" />' +
+          '<input class="field trio-d" inputmode="numeric" maxlength="2" placeholder="日" />' +
+        '</div>' +
+        '<select class="field trio-mbti" style="margin-top:8px"></select>' +
+      '</div>';
+    box.appendChild(slot);
+
+    // 成员下拉：全部 37 位，按代次分组
+    const sel = slot.querySelector('.trio-idol');
+    for (const era of [1,2,3,4]){
+      const g = document.createElement('optgroup');
+      g.label = TRIO_ERA_NAME[era];
+      MEMBERS.filter(m => m.era === era).forEach(m => {
+        const o = document.createElement('option');
+        o.value = m.n; o.textContent = m.n + '（' + m.g + '）';
+        g.appendChild(o);
+      });
+      sel.appendChild(g);
+    }
+    // MBTI 下拉
+    const ms = slot.querySelector('.trio-mbti');
+    ms.innerHTML = '<option value="UNKNOWN">还不知道 TA 的 MBTI</option>' +
+      MBTI_LIST.map(t => '<option value="' + t + '">' + t + '</option>').join('');
+
+    // 身份切换
+    slot.querySelectorAll('.trio-tab').forEach(btn => {
+      btn.onclick = () => {
+        const k = btn.dataset.kind;
+        slot.dataset.kind = k;
+        slot.querySelectorAll('.trio-tab').forEach(b => b.classList.toggle('active', b === btn));
+        slot.querySelectorAll('.trio-pane').forEach(p => {
+          p.style.display = (p.dataset.pane === k) ? 'block' : 'none';
+        });
+        validateForm();
+      };
+    });
+    slot.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', validateForm);
+      el.addEventListener('change', validateForm);
+    });
+  });
+  box.dataset.built = '1';
+}
+/* 采集两位槽位数据（第 1 位 = 主表单的「我自己」） */
+function collectTrio(){
+  const list = [];
+  let ok = true;
+  const slots = document.querySelectorAll('#trio-slots .trio-slot');
+  slots.forEach(slot => {
+    const kind = slot.dataset.kind || 'idol';
+    if (kind === 'idol'){
+      const v = slot.querySelector('.trio-idol').value;
+      const m = MEMBERS.find(x => x.n === v);
+      if (!m) { ok = false; return; }
+      const [y,mo,d] = m.b.split('-').map(Number);
+      list.push({ name:m.n, y, m:mo, d, mbti:m.m || null, isIdol:true, idol:m });
+    } else {
+      const n  = slot.querySelector('.trio-name').value.trim();
+      const y  = +slot.querySelector('.trio-y').value;
+      const mo = +slot.querySelector('.trio-mo').value;
+      const d  = +slot.querySelector('.trio-d').value;
+      const raw = slot.querySelector('.trio-mbti').value;
+      let valid = !!(n && y && mo && d);
+      if (valid){
+        if (y < 1920 || y > new Date().getFullYear() || mo < 1 || mo > 12) valid = false;
+        else { const dt = new Date(y, mo-1, d); if (dt.getMonth() !== mo-1 || dt.getDate() !== d) valid = false; }
+      }
+      if (!valid) { ok = false; return; }
+      list.push({ name:n, y, m:mo, d, mbti: raw === 'UNKNOWN' ? null : raw, isIdol:false });
+    }
+  });
+  return { ok, list };
+}
+function validateTrio(){
+  const name = $('f-name').value.trim();
+  const birth = readBirth();
+  const full = $('f-year').value.length===4 && $('f-month').value && $('f-day').value;
+  $('birth-error').classList.toggle('show', full && birth === false);
+  const okBase = !!(name && birth && picked);
+  const c = collectTrio();
+  $('trio-error').classList.toggle('show', okBase && !c.ok);
+  const ok = okBase && c.ok;
   $('submit-btn').disabled = !ok;
   return ok;
 }
@@ -1617,14 +1868,167 @@ function submitForm(){
   const b = readBirth();
   const pickedIdol = state.test === 'past' ? ($('f-idol').value || null) : null;
   state.user = { name, y:b.y, m:b.m, d:b.d, mbti: picked==='UNKNOWN' ? null : picked, pickedIdol };
+  if (state.test === 'trio'){
+    // 第 1 位 = 我自己，2/3 位 = 槽位采集
+    state.party = [{ name, y:b.y, m:b.m, d:b.d, mbti: picked==='UNKNOWN'?null:picked, isIdol:false }]
+                  .concat(collectTrio().list);
+  }
   go('loading');
   $('loading-text').textContent = {
     love:'正在排序你的 Top3 缘分…',
     past:'正在翻开前世那一页…',
     best:'正在排序成员池…',
-    profile:'正在展开你的 10 维命盘…'
+    profile:'正在展开你的 10 维命盘…',
+    trio:'正在画你们三人的关系图…'
   }[state.test];
   setTimeout(renderResult, 1800);
+}
+
+/* ================================================================
+ * 三方合盘：三人的五行 · 日支 · 生肖 · MBTI 关系
+ * 三个位置自由组合：我 / 朋友（真人）/ 成员（37 人任选）
+ * ================================================================ */
+function profileWithYs(p){
+  const el  = dayElement(p.y,p.m,p.d);
+  const mon = monthEl(p.m,p.d);
+  return Object.assign({}, p, {
+    el, mon,
+    zhi: dayBranch(p.y,p.m,p.d),
+    ani: animalOf(p.y,p.m,p.d),
+    ys:  yongShen(el, mon)
+  });
+}
+/* 五行关系：以 a 为主体看 b */
+function wxRel5(a, b){
+  if (a === b) return 'same';
+  if ((b + 1) % 5 === a) return 'shengWo';   // b 生 a
+  if ((a + 1) % 5 === b) return 'woSheng';   // a 生 b
+  if ((b + 2) % 5 === a) return 'keWo';      // b 克 a
+  return 'woKe';                              // a 克 b
+}
+const TRIO_EL_COLOR = ['#dcfce7','#fee2e2','#fef3c7','#e5e7eb','#dbeafe'];
+function edgeOf(a, b){
+  const wx   = wxRel5(a.el, b.el);
+  const ysAB = ysRelOf(a.ys, b.el);   // b 对 a 是不是喜用
+  const ysBA = ysRelOf(b.ys, a.el);   // a 对 b
+  const zhi  = ttiRel(a.zhi, b.zhi);
+  const tti  = ttiRel(a.ani, b.ani);
+  const mb   = mbtiResonance(a.mbti, b.mbti);
+
+  /* 全正向计分，不倒扣 */
+  let tone = 0;
+  tone += (wx === 'shengWo' || wx === 'woSheng') ? 1.5 : (wx === 'same' ? 1 : 0.6);
+  if (ysAB === 'xi') tone += 1.4;
+  if (ysBA === 'xi') tone += 1.4;
+  if (zhi === 'samhap' || zhi === 'yukhap') tone += 1.5;
+  else if (zhi === 'same') tone += 1;
+  else if (zhi === 'chung') tone += 0.4;
+  else tone += 0.7;
+  if (tti === 'samhap' || tti === 'yukhap') tone += 0.5;
+  if (mb === 15) tone += 0.5;
+  tone = Math.round(Math.min(5, tone) * 10) / 10;
+
+  /* 主标签：按强度取最值得说的那个 */
+  let tag, key;
+  if (zhi === 'yukhap')           { tag = '日支六合'; key = 'yukhap'; }
+  else if (zhi === 'samhap')      { tag = '日支三合'; key = 'samhap'; }
+  else if (ysAB === 'xi' && ysBA === 'xi') { tag = '互为喜用'; key = 'bothXi'; }
+  else if (wx === 'shengWo' || wx === 'woSheng') { tag = '五行相生'; key = 'sheng'; }
+  else if (wx === 'same')         { tag = '同一种气息'; key = 'same'; }
+  else if (zhi === 'chung')       { tag = '节奏不同'; key = 'diff'; }
+  else                            { tag = '不冲不生'; key = 'normal'; }
+
+  return { wx, ysAB, ysBA, zhi, tti, mb, tone, tag, key };
+}
+/* 边的解读：同时读双方标签（不写死单方模板） */
+function edgeText(a, b, e){
+  const ae = EL_IMAGE[a.el], be = EL_IMAGE[b.el];
+  const An = a.name, Bn = b.name;
+  if (e.key === 'yukhap')
+    return An + '和' + Bn + '的日支正好六合 —— 像两块互补的拼图，初见就容易有种「好像认识很久」的熟。';
+  if (e.key === 'samhap')
+    return An + '和' + Bn + '的日支同属三合一组，节奏天然对得上，不用刻意找话题也不冷场。';
+  if (e.key === 'bothXi')
+    return Bn + '的' + be.name + '正好是' + An + '喜用的那一味，反过来也一样 —— 你们互相把对方缺的那一角补上了。';
+  if (e.key === 'sheng'){
+    const fwd = e.wx === 'woSheng';
+    return (fwd ? An : Bn) + '的' + (fwd ? ae.name : be.name) + '（' + (fwd ? ae.verb : be.verb) + '）' +
+           '去生' + (fwd ? Bn : An) + '的' + (fwd ? be.name : ae.name) +
+           ' —— 一个供给、一个承接，这段关系的温度是流动的。';
+  }
+  if (e.key === 'same')
+    return An + '和' + Bn + '都是' + ae.name + '性：' + ae.verb + '。喜欢的歌、受不了的小事，几乎像同一张清单。';
+  if (e.key === 'diff')
+    return An + '的' + ae.name + '（' + ae.verb + '）和' + Bn + '的' + be.name + '（' + be.verb +
+           '）节奏差异偏大。不是不合，是两种不同的乐器 —— 磕绊，但格外有记忆点。';
+  return An + '的' + ae.name + '和' + Bn + '的' + be.name + '不冲也不生。不费力也不黏腻，是一段刚刚好的距离。';
+}
+function trioVerdict(avg){
+  if (avg >= 3.6) return {title:'铁三角', text:'三条边都很稳 —— 这种组合少见，三个人凑在一起时，气氛是自动变好的。'};
+  if (avg >= 2.9) return {title:'稳的一组', text:'整体节奏对得上，即便有一两条边稍弱，也不影响三个人待在一起的舒适度。'};
+  if (avg >= 2.2) return {title:'有张力的一组', text:'不是每个人都合拍，但正是这种参差让三人关系有戏 —— 有人负责点火，有人负责降温。'};
+  return {title:'风格迥异', text:'三个人的节奏都不太一样，凑在一起需要一点磨合期。不过差异本身也是一种趣味。'};
+}
+
+function renderTrio(u){
+  const party = state.party.map(profileWithYs);
+  const pairs = [[0,1],[1,2],[0,2]];
+  const edges = pairs.map(p => { const e = edgeOf(party[p[0]], party[p[1]]); return {a:p[0], b:p[1], e}; });
+  const avg = Math.round(edges.reduce((s,x) => s + x.e.tone, 0) / 3 * 10) / 10;
+  const v = trioVerdict(avg);
+
+  /* 三角坐标 */
+  const P = [{x:200,y:64},{x:72,y:254},{x:328,y:254}];
+  const M = [{x:136,y:159},{x:200,y:254},{x:264,y:159}];
+  const strokeOf = t => t >= 3.4 ? '#ff5a8a' : (t >= 2.4 ? '#ffbe3d' : '#a78bfa');
+
+  const lines = edges.map((ed,k) => {
+    const s = strokeOf(ed.e.tone);
+    const m = M[k];
+    const w = ed.e.tag.length * 12 + 18;
+    return '<line x1="' + P[ed.a].x + '" y1="' + P[ed.a].y + '" x2="' + P[ed.b].x + '" y2="' + P[ed.b].y +
+           '" stroke="' + s + '" stroke-width="5" stroke-linecap="round" opacity="0.85"/>' +
+           '<rect x="' + (m.x - w/2) + '" y="' + (m.y - 14) + '" width="' + w + '" height="28" rx="14" ' +
+           'fill="#fff" stroke="' + s + '" stroke-width="2.5"/>' +
+           '<text x="' + m.x + '" y="' + (m.y + 6) + '" text-anchor="middle" font-size="13" font-weight="800" fill="#1c1917">' + ed.e.tag + '</text>';
+  }).join('');
+
+  const nodes = party.map((p,k) => {
+    const c = TRIO_EL_COLOR[p.el];
+    return '<circle cx="' + P[k].x + '" cy="' + P[k].y + '" r="46" fill="' + c + '" stroke="#1c1917" stroke-width="3"/>' +
+           '<text x="' + P[k].x + '" y="' + (P[k].y - 2) + '" text-anchor="middle" font-size="15" font-weight="800" fill="#1c1917">' + p.name + '</text>' +
+           '<text x="' + P[k].x + '" y="' + (P[k].y + 18) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#7c6f68">' +
+             ELEMENTS[p.el] + ' · ' + (p.mbti || 'MBTI 未填') + '</text>';
+  }).join('');
+
+  const edgeCards = edges.map((ed,k) => {
+    const A = party[ed.a], B = party[ed.b];
+    const t = ed.e.tone;
+    const tagColor = (t >= 2.4 && t < 3.4) ? '#1c1917' : '#fff';   // 黄底用深字
+    return '<div class="trio-edge">' +
+      '<div class="trio-edge-head"><span class="trio-edge-no">连线 ' + (k+1) + '</span>' +
+      '<span class="trio-edge-tag" style="background:' + strokeOf(t) + ';color:' + tagColor + '">' + ed.e.tag + '</span>' +
+      '<span class="trio-edge-name">' + A.name + ' × ' + B.name + '</span></div>' +
+      '<p>' + edgeText(A, B, ed.e) + '</p></div>';
+  }).join('');
+
+  return '' +
+    '<div class="result-card">' +
+      '<div class="result-header">' +
+        '<p class="r-eyebrow">三方合盘 · 意象关系图</p>' +
+        '<h2>' + v.title + '</h2>' +
+        '<p class="score-label" style="margin-top:12px;">综合契合 ' + avg + ' / 5 · ' + v.text + '</p>' +
+      '</div>' +
+      '<div class="trio-figure">' +
+        '<svg viewBox="0 0 400 320" class="trio-svg" role="img" aria-label="三方关系图">' +
+          lines + nodes +
+        '</svg>' +
+      '</div>' +
+      '<div class="trio-edges">' + edgeCards + '</div>' +
+      '<div class="r-body">' +
+        '<p class="disclaimer-mini">本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。成员的 MBTI 为粉丝推测整理，公司从未官方公布。</p>' +
+      '</div>' +
+    '</div>';
 }
 
 /* ---------- 结果渲染 ---------- */
@@ -1634,7 +2038,8 @@ function renderResult(){
     love: renderLove,
     past: renderPast,
     best: renderBest,
-    profile: renderProfile
+    profile: renderProfile,
+    trio: renderTrio
   }[state.test](u);
   $('result-content').innerHTML = html;
   go('result');
