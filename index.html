@@ -300,6 +300,19 @@
   .era-all-btn:hover { background: var(--fg-soft); }
 
   /* 结果页匹配池提示 */
+  .ys-note {
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fff5e9;
+    border: 1px dashed #ffcf8a;
+    border-radius: 12px;
+    display: inline-block;
+  }
+  .ys-note b { color: var(--accent); font-weight: 800; }
   .pool-note {
     text-align: center;
     font-family: var(--font-mono);
@@ -848,7 +861,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
           </div>
           <h3>天生缘分</h3>
-          <p>谁和你日柱五行相生、MBTI 完美搭配？100 分制告诉你答案。<small style="display:block;margin-top:6px;color:#c48a00;font-weight:700">· 仅 18+ · 成年成员池</small></p>
+          <p>谁的五行正好补上你的喜用、MBTI 又能对上？100 分制给你一份意象排序。<small style="display:block;margin-top:6px;color:#c48a00;font-weight:700">· 仅 18+ · 成年成员池</small></p>
           <span class="f-cta">查天生缘分 →</span>
         </button>
         <button class="feature v2" onclick="pickTest('past')">
@@ -1132,7 +1145,32 @@ function ttiRel(a,b){
 /* 新权重合计 100：
    五行意象互补 30 + 干支合/三合意象 20 + 月令季节气质 15
  + MBTI 气质共鸣 15 + 太阳星座元素 12 + 生肖民俗意象 8   */
-const SAJU_SCORE  = {idolFeedsMe:30, meFeedsIdol:30, same:26, clash:18};   // 满分30
+const SAJU_SCORE  = {idolFeedsMe:30, meFeedsIdol:30, same:26, clash:18};   // 满分30（旧版相生关系，仅留作文案参考）
+
+/* ---------- 喜用神（子平扶抑法 · 简化版）----------
+   十神相对日干 D（0木1火2土3金4水）：
+     比劫=D   印=(D+4)%5   食伤=(D+1)%5   财=(D+2)%5   官杀=(D+3)%5
+   旺衰：看月令五行 W 与日干 D 的关系
+     W===D（比劫当令）或 (W+1)%5===D（印星当令）      → 身强
+     (D+1)%5===W（食伤泄气）/(W+2)%5===D（官杀克身）/(D+2)%5===W（财星耗身） → 身弱
+   身强 宜克泄耗 → 喜 食伤/财/官杀(D+1,D+2,D+3)，忌 印/比劫(D+4,D)
+   身弱 宜生扶   → 喜 印/比劫(D+4,D)，        忌 食伤/财/官杀(D+1,D+2,D+3)
+   打分：喜用神 30 / 中性 21 / 忌神 12 —— 全正向，不倒扣   */
+function yongShen(uEl, uMon){
+  const strong = (uMon === uEl) || ((uMon + 1) % 5 === uEl);
+  const xi = strong ? [(uEl+1)%5,(uEl+2)%5,(uEl+3)%5] : [(uEl+4)%5, uEl];
+  const ji = strong ? [(uEl+4)%5, uEl]                : [(uEl+1)%5,(uEl+2)%5,(uEl+3)%5];
+  return {strong, xi, ji};
+}
+const WX_SCORE = {xi:30, neutral:21, ji:12};
+function ysRelOf(ys, iEl){
+  if (ys.xi.indexOf(iEl) >= 0) return 'xi';
+  if (ys.ji.indexOf(iEl) >= 0) return 'ji';
+  return 'neutral';
+}
+function wuxingScore(uEl, uMon, iEl){ return WX_SCORE[ysRelOf(yongShen(uEl,uMon), iEl)]; }
+const YS_REL_TITLE = {xi:'恰好对你胃口', ji:'节奏略有出入', neutral:'不偏不倚'};
+const MONTH_SEASON = ['春木','夏火','长夏土','秋金','冬水'];
 const ZHI_SCORE   = {samhap:20, yukhap:20, same:14, normal:11, chung:8};   // 满分20
 const MONTH_SCORE = {idolFeedsMe:15, meFeedsIdol:15, same:12, clash:8};    // 满分15
 const TTI_SCORE   = {samhap:8, yukhap:8, same:6, normal:5, chung:4};       // 满分8
@@ -1180,10 +1218,14 @@ function scoreOne(user, idol){
   const zRel = ttiRel(uZhi,iZhi);          // 日支（干支意象）
   const mScore = mbtiResonance(user.mbti, idol.m);
   const zcScore = zodiacScore(um,ud,im,id);
-  const raw = SAJU_SCORE[sRel] + ZHI_SCORE[zRel] + MONTH_SCORE[sajuRel(uMon,iMon)]
+  // 五行意象互补 30：改用喜用神判定（对方日干是否是你这一造需要的那一味）
+  const ys = yongShen(uEl, uMon);
+  const ysRel = ysRelOf(ys, iEl);
+  const wxScore = WX_SCORE[ysRel];
+  const raw = wxScore + ZHI_SCORE[zRel] + MONTH_SCORE[sajuRel(uMon,iMon)]
             + mScore + zcScore + TTI_SCORE[tRel];
   const score = Math.max(20, Math.min(100, raw));   // 保底 ≥20，封顶 100
-  return {score, sRel, tRel, zRel, mScore, zcScore, uEl, iEl, uAni, iAni, uMon, iMon};
+  return {score, sRel, ysRel, wxScore, ys, tRel, zRel, mScore, zcScore, uEl, iEl, uAni, iAni, uMon, iMon};
 }
 
 function scoreAll(user, pool){
@@ -1321,6 +1363,14 @@ const PAST_ROMANCE = [
 ];
 
 /* ---------- 前世关系：日支六合判定 + 60甲子哈希抽卡（对齐 choiaesaju）---------- */
+/* 判定依据已固化，不再随卡池内容变化：
+   - 分支：日支六合 && 成员成年 → 情债池；否则 → 日常池
+   - 模数：情债 5 / 日常 23（对齐 choiaesaju 的 counts）
+   - 公式：情债 (a+b)%5；日常 (a*31+b*17)%23
+   卡池内容可自由增删，但卡池条数须保持 23 / 5，否则需同步改这里。 */
+const PAST_COUNTS = { normal: 23, romance: 5 };
+function mod(x, n){ return ((x % n) + n) % n; }
+
 function pastRel(user){
   // 1) 用户自选成员优先；否则从（世代筛选后的）池里推一位最有缘的
   let idol = null;
@@ -1343,10 +1393,11 @@ function pastRel(user){
   // 4) romance 分支 = 六合 且 成年；否则 normal 分支
   const romance = yukhap && adult;
 
-  // 5) 抽卡：恋爱池用 (a+b) % 5；普通池用质数散列 (a*31 + b*17) % 23
+  // 5) 抽卡（模数用常量，对齐 choiaesaju 的 counts，不随卡池编辑而漂移）
+  //    恋爱池：(a+b) % 5；普通池：质数散列 (a*31 + b*17) % 23
   const idx = romance
-    ? ((a + b) % PAST_ROMANCE.length + PAST_ROMANCE.length) % PAST_ROMANCE.length
-    : ((a * 31 + b * 17) % PAST_NORMAL.length + PAST_NORMAL.length) % PAST_NORMAL.length;
+    ? mod(a + b, PAST_COUNTS.romance)
+    : mod(a * 31 + b * 17, PAST_COUNTS.normal);
 
   const card = romance ? PAST_ROMANCE[idx] : PAST_NORMAL[idx];
 
@@ -1615,21 +1666,21 @@ const SAJU_REL_TITLE = {
   idolFeedsMe:'他托住你', meFeedsIdol:'你托住他',
   same:'同一种气息', clash:'节奏差异偏大'
 };
-/* 动态生成：读取 你五行 × 他五行 */
+/* 动态生成：读取 你五行 × 他五行 × 你的喜用神（三方标签都读，不写死单方模板） */
 function loveSajuSentence(r){
   const ue = EL_IMAGE[r.uEl], ie = EL_IMAGE[r.iEl];
-  const rel = r.sRel;
+  const rel = r.ysRel || 'neutral';
+  const season = MONTH_SEASON[r.uMon] || '';
+  const tone = r.ys && r.ys.strong ? '偏旺' : '偏弱';
   let text;
-  if (rel === 'idolFeedsMe'){
-    text = `${r.idol.n}身上那股「${ie.img}」，刚好补上你缺少的部分。你容易钻牛角尖的时刻，他那种${ie.verb}的处理方式，会让你觉得事情没那么难。`;
-  } else if (rel === 'meFeedsIdol'){
-    text = `你身上那股「${ue.img}」，正好托住${r.idol.n}的节奏。他往前冲的时候，你负责把后方稳住——这段关系里的温度是你定的。`;
-  } else if (rel === 'same'){
-    text = `你和${r.idol.n}都是${ue.name}性的调子：${ue.verb}。喜欢的歌、受不了的小事、甚至翻白眼的时机，都像同一张清单。`;
+  if (rel === 'xi'){
+    text = `你是${ue.name}性日主，生于${season}当令的月份，这一造${tone}——你需要的正是${ie.name}那股「${ie.img}」。${r.idol.n}身上恰好有这一味，他${ie.verb}的处理方式，会把你缺的那一角补上。`;
+  } else if (rel === 'ji'){
+    text = `你是${ue.name}性、生于${season}，这一造本来就${tone}；${ie.name}（${ie.verb}）对你来说略微过旺了一些。不是不合，是节奏差异偏大——你${ue.verb}，他${ie.verb}，像两种乐器即兴合奏，磕绊但格外有记忆点。`;
   } else {
-    text = `你的${ue.name}（${ue.verb}）和他的${ie.name}（${ie.verb}）节奏不太一样。差异带来不一样的火花，相处像两种乐器即兴合奏。`;
+    text = `你的${ue.name}（${ue.verb}）与他的${ie.name}（${ie.verb}）不冲也不生。不费力也不黏腻，是一段刚刚好的距离。`;
   }
-  return {title:`${ue.name} × ${ie.name} · ${SAJU_REL_TITLE[rel]}`, text};
+  return {title:`${ue.name} × ${ie.name} · ${YS_REL_TITLE[rel]}`, text};
 }
 /* 生肖意象：双方生肖 + 关系 */
 const LOVE_TTI_DESC = {
@@ -1707,18 +1758,23 @@ function renderLove(u){
     `;
   }).join('');
 
+  const ys0 = top3[0].ys;
+  const xiTxt = ys0.xi.map(e=>ELEMENTS[e]).join('、');
+  const jiTxt = ys0.ji.map(e=>ELEMENTS[e]).join('、');
+
   return `
     <div class="result-card">
       <div class="result-header">
         <p class="r-eyebrow">天生缘分 · Top3</p>
         <h2>${u.name} 的天生缘分 Top3<br/>是 <span class="accent-name">${top3[0].idol.n}</span></h2>
         <p class="score-label" style="margin-top:14px;">意象契合度排序 · 仅供娱乐想象</p>
+        <p class="ys-note">你的日主：<b>${ELEMENTS[top3[0].uEl]}</b> 性 · 生于 ${MONTH_SEASON[top3[0].uMon]} 当令（${ys0.strong?'偏旺':'偏弱'}）<br/>喜用：${xiTxt} ｜ 忌：${jiTxt}</p>
         <p class="pool-note">本次匹配池：${eraLabel()}（成年成员）</p>
       </div>
       <div class="love-grid">${cardHTML}</div>
       <div class="r-body">
         <p style="color:var(--muted);font-size:13px;text-align:center;">
-          契合度由五个意象维度合成：五行意象互补 30 · 干支合/三合意象 20 · 月令季节气质 15 · MBTI 气质共鸣 15 · 太阳星座元素 12 · 生肖民俗意象 8。
+          契合度由六个意象维度合成：五行喜用互补 30 · 干支合/三合意象 20 · 月令季节气质 15 · MBTI 气质共鸣 15 · 太阳星座元素 12 · 生肖民俗意象 8。
         </p>
         <p class="disclaimer-mini">
           本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。
@@ -1804,7 +1860,7 @@ function renderBest(u){
         `).join('')}
       </div>
       <div class="r-body">
-        <p>你的 Top1 是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。你俩的五行意象呈现「${['同一种气息','他滋养你','你陪伴他','节奏差异偏大，会带来不一样的火花'][['same','idolFeedsMe','meFeedsIdol','clash'].indexOf(top3[0].sRel)]}」的调性。</p>
+        <p>你的 Top1 是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。你的日主是 <b>${ELEMENTS[top3[0].uEl]}</b> 性、生于 ${MONTH_SEASON[top3[0].uMon]} 当令（${top3[0].ys.strong?'偏旺':'偏弱'}），喜用 ${top3[0].ys.xi.map(e=>ELEMENTS[e]).join('、')}；TA 的日干是 ${ELEMENTS[top3[0].iEl]} 性，${['恰好是你喜用的那一味，容易一拍即合','与你节奏略有出入，差异会带来不一样的火花','与你互不偏倚，相处不费力'][['xi','ji','neutral'].indexOf(top3[0].ysRel)]}。</p>
         <p style="color:var(--muted);font-size:13px;">· 契合度仅为意象创作维度的合成参考，不是严谨运算。</p>
         <p class="disclaimer-mini">本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。</p>
       </div>
