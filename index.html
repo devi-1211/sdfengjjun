@@ -300,19 +300,6 @@
   .era-all-btn:hover { background: var(--fg-soft); }
 
   /* 结果页匹配池提示 */
-  .ys-note {
-    text-align: center;
-    font-size: 12.5px;
-    line-height: 1.7;
-    color: var(--muted);
-    margin-top: 12px;
-    padding: 10px 14px;
-    background: #fff5e9;
-    border: 1px dashed #ffcf8a;
-    border-radius: 12px;
-    display: inline-block;
-  }
-  .ys-note b { color: var(--accent); font-weight: 800; }
   .pool-note {
     text-align: center;
     font-family: var(--font-mono);
@@ -1758,24 +1745,16 @@ function renderLove(u){
     `;
   }).join('');
 
-  const ys0 = top3[0].ys;
-  const xiTxt = ys0.xi.map(e=>ELEMENTS[e]).join('、');
-  const jiTxt = ys0.ji.map(e=>ELEMENTS[e]).join('、');
-
   return `
     <div class="result-card">
       <div class="result-header">
         <p class="r-eyebrow">天生缘分 · Top3</p>
         <h2>${u.name} 的天生缘分 Top3<br/>是 <span class="accent-name">${top3[0].idol.n}</span></h2>
         <p class="score-label" style="margin-top:14px;">意象契合度排序 · 仅供娱乐想象</p>
-        <p class="ys-note">你的日主：<b>${ELEMENTS[top3[0].uEl]}</b> 性 · 生于 ${MONTH_SEASON[top3[0].uMon]} 当令（${ys0.strong?'偏旺':'偏弱'}）<br/>喜用：${xiTxt} ｜ 忌：${jiTxt}</p>
         <p class="pool-note">本次匹配池：${eraLabel()}（成年成员）</p>
       </div>
       <div class="love-grid">${cardHTML}</div>
       <div class="r-body">
-        <p style="color:var(--muted);font-size:13px;text-align:center;">
-          契合度由六个意象维度合成：五行喜用互补 30 · 干支合/三合意象 20 · 月令季节气质 15 · MBTI 气质共鸣 15 · 太阳星座元素 12 · 生肖民俗意象 8。
-        </p>
         <p class="disclaimer-mini">
           本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。
         </p>
@@ -1820,19 +1799,6 @@ function renderPast(u){
         <p class="past-last-text">${last}</p>
       </div>
 
-      <div class="past-detail">
-        <div class="past-detail-tag">判定依据</div>
-        <div class="past-pills">
-          <span class="past-pill">你 · ${ELEMENTS[uEl]}性 · ${ANIMALS[uAni]}生</span>
-          <span class="past-pill">他 · ${ELEMENTS[iEl]}性 · ${ANIMALS[iAni]}生</span>
-          <span class="past-pill">日支${r.yukhap?'六合 ✓':'未六合'}</span>
-          <span class="past-pill">${r.adult?'成年':'未成年'}</span>
-        </div>
-        <p style="margin-top:12px;color:var(--muted);font-size:13.5px;line-height:1.65;">
-          先把两人生日换算成 60 甲子日柱，取日支判定是否六合；六合且成年走「情债」池（${PAST_ROMANCE.length} 张），否则走「日常」池（${PAST_NORMAL.length} 张）。抽卡用散列 <code>(a×31+b×17) % ${PAST_NORMAL.length}</code>，本次落在第 <b>${r.index + 1}</b> 张。故事、转世痕迹、遗言三份文案随 index 联动。
-        </p>
-      </div>
-
       <p class="pool-note">本次匹配池：${eraLabel()}</p>
       <p class="disclaimer-mini">仅借用传统干支符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。想换个人测？点下面「重新填信息」。</p>
     </div>
@@ -1860,8 +1826,7 @@ function renderBest(u){
         `).join('')}
       </div>
       <div class="r-body">
-        <p>你的 Top1 是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。你的日主是 <b>${ELEMENTS[top3[0].uEl]}</b> 性、生于 ${MONTH_SEASON[top3[0].uMon]} 当令（${top3[0].ys.strong?'偏旺':'偏弱'}），喜用 ${top3[0].ys.xi.map(e=>ELEMENTS[e]).join('、')}；TA 的日干是 ${ELEMENTS[top3[0].iEl]} 性，${['恰好是你喜用的那一味，容易一拍即合','与你节奏略有出入，差异会带来不一样的火花','与你互不偏倚，相处不费力'][['xi','ji','neutral'].indexOf(top3[0].ysRel)]}。</p>
-        <p style="color:var(--muted);font-size:13px;">· 契合度仅为意象创作维度的合成参考，不是严谨运算。</p>
+        <p>你的 Top1 是 <b style="color:var(--accent)">${top3[0].idol.n}</b> · ${top3[0].idol.g}。</p>
         <p class="disclaimer-mini">本页仅借用传统干支、五行、星座符号做趣味意象游戏，不是正统命理、不是科学结论，仅供娱乐想象。</p>
       </div>
     </div>
