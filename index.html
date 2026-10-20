@@ -357,6 +357,24 @@
     margin-top: 10px; padding: 11px 13px; background: #fff; border: 2px solid var(--border);
     border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--fg); line-height: 1.75;
   }
+  .cp-quad-why {
+    margin-top: 8px !important; padding: 9px 12px; background: #faf7f3;
+    border-radius: 10px; font-size: 12.5px !important; color: #4a423e !important;
+    line-height: 1.75; font-weight: 700 !important;
+  }
+  .cp-why-item p { font-size: 13px; color: #4a423e; margin-top: 6px; line-height: 1.75; font-weight: 600; }
+  .cp-flavor {
+    background: linear-gradient(135deg, #fff5e9 0%, #ffe6ef 100%);
+    border: 2px solid var(--border); border-radius: 14px; padding: 14px 16px;
+    box-shadow: 4px 4px 0 var(--border);
+  }
+  .cp-flavor-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .cp-flavor-name { font-family: var(--font-display); font-size: 21px; font-weight: 900; color: var(--fg); }
+  .cp-flavor-sub { font-size: 12px; font-weight: 800; color: var(--muted); }
+  .cp-flavor p { font-size: 13px; color: #4a423e; margin-top: 6px; line-height: 1.8; font-weight: 600; }
+  .cp-flavor-attract {
+    margin-top: 8px !important; padding-top: 8px; border-top: 1px dashed #e8d0b0; color: #8a5a2b !important;
+  }
   .cp-daily {
     background: linear-gradient(135deg, #ffe6ef 0%, #efe4ff 100%);
     border: 2px solid var(--border); border-radius: 14px; padding: 14px 16px;
@@ -984,7 +1002,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="16" cy="9" r="3.2"/><circle cx="12" cy="17" r="3.2"/><path d="M11 10.6 10.4 14M13.6 11.4 14.2 14M9.4 17.6h5.2"/></svg>
           </div>
           <h3>本命 CP</h3>
-          <p>你和他的一对一缘分：双轴图、四象限、关系温度、冲突剧本，还有每天更新的关系事件。</p>
+          <p>用你的八字判断和哪一对 CP 更合：双轴图、四象限、关系温度、冲突剧本，还有每天更新的关系事件。</p>
           <span class="f-cta">查我的本命 CP →</span>
         </button>
       </div>
@@ -1070,22 +1088,33 @@
         <p class="form-error" id="trio-error">请把两位的信息填完整</p>
       </div>
 
-      <!-- 本命 CP：自选 CP（选填，不选则系统排 Top3） -->
+      <!-- 本命 CP：选一对 CP（选填，不选则系统推一对） -->
       <div class="form-group" id="cp-wrap" style="display:none;">
-        <label class="field-label">想测和谁的缘分（选填）</label>
-        <p class="cp-pick-note">不选的话，系统会从成员里推一位最合的；想指定一位，就自己挑。</p>
+        <label class="field-label">想测哪一对 CP（选填）</label>
+        <p class="cp-pick-note">不选的话，系统会从候选里推一对最合的；想指定一对，就自己挑。</p>
         <div class="trio-tabs" id="cp-mode-tabs">
           <button type="button" class="trio-tab active" data-mode="auto">系统帮我挑</button>
           <button type="button" class="trio-tab" data-mode="manual">我自己选</button>
         </div>
         <div id="cp-manual" style="display:none;">
+          <div class="trio-tabs" id="cp-way-tabs">
+            <button type="button" class="trio-tab active" data-way="preset">热门 CP 名单</button>
+            <button type="button" class="trio-tab" data-way="free">自由组合</button>
+          </div>
           <div class="era-grid cp-era-mini" id="cp-era-grid">
             <button type="button" class="cp-era-btn active" data-cpera="1">一代</button>
             <button type="button" class="cp-era-btn active" data-cpera="2">二代</button>
             <button type="button" class="cp-era-btn active" data-cpera="3">三代</button>
           </div>
-          <div class="cp-chip-grid" id="cp-member-chips"></div>
-          <p class="cp-picked" id="cp-picked">当前：未选择（由系统推一位）</p>
+          <div id="cp-preset-box">
+            <div class="cp-chip-grid" id="cp-preset-chips"></div>
+          </div>
+          <div id="cp-free-box" style="display:none;">
+            <p class="cp-pick-note">点两位同代成员，组成你想测的一对。</p>
+            <div class="cp-chip-grid" id="cp-member-chips"></div>
+          </div>
+          <p class="cp-picked" id="cp-picked">当前：未选择（由系统推一对）</p>
+          <p class="form-error" id="cp-error">请再选一位，凑满两个人</p>
         </div>
       </div>
 
@@ -1762,13 +1791,13 @@ function startTest(key){
     past:    '前世关系 · 选一位成员',
     best:    '本命 Top3 · 填一行信息',
     trio:    '三人合盘 · 填三份信息',
-    cp:      '本命 CP · 填一行信息 + 选一位'
+    cp:      '本命 CP · 填一行信息 + 选一对'
   };
   const btnTexts = {
     past:    '查我们的前世关系',
     best:    '查我的本命 Top3',
     trio:    '画出我们的小队图',
-    cp:      '查我和他的缘分'
+    cp:      '查我和哪对 CP 更合'
   };
   $('input-title').textContent = titles[key];
   $('submit-text').textContent = btnTexts[key];
@@ -1869,8 +1898,14 @@ function validateForm(){
   const full = $('f-year').value.length===4 && $('f-month').value && $('f-day').value;
   $('birth-error').classList.toggle('show', full && birth===false);
   const ok = !!(name && birth && picked);
-  $('submit-btn').disabled = !ok;
-  return ok;
+  // 本命 CP：自由组合必须凑满两位
+  let okCp = true;
+  if (state.test === 'cp'){
+    okCp = !(cpMode === 'manual' && cpWay === 'free' && !(cpFreeA && cpFreeB));
+    $('cp-error').classList.toggle('show', ok && !okCp);
+  }
+  $('submit-btn').disabled = !(ok && okCp);
+  return ok && okCp;
 }
 
 /* ---------- 三方合盘：槽位构建 / 采集 / 校验 ---------- */
@@ -1982,39 +2017,73 @@ function validateTrio(){
   $('submit-btn').disabled = !ok;
   return ok;
 }
-/* ---------- 本命 CP：选一位成员（1v1） ---------- */
+/* ---------- 本命 CP：选一对 CP ---------- */
 let cpMode   = 'auto';                 // auto | manual
+let cpWay    = 'preset';               // preset(热门名单) | free(自由组合)
 let cpEraSel = new Set([1,2,3]);
-let cpPickName = null;                 // 自己选的成员名
+let cpChosenPair = null;               // 名单里选中的 CP 对象
+let cpFreeA = null, cpFreeB = null;    // 自由组合的两位成员名
 
-/* 本命 CP 只开放一代~三代且已成年的成员（四代全员未成年，不参与） */
+/* 自由组合只开放一代~三代且已成年（四代与跨代不收） */
 function cpMemberPool(){
   return MEMBERS.filter(m => m.era >= 1 && m.era <= 3)
                 .filter(m => ageOf.apply(null, m.b.split('-').map(Number)) >= 18);
 }
-function currentCpMember(){
-  if (cpMode !== 'manual' || !cpPickName) return null;
-  return MEMBERS.find(x => x.n === cpPickName) || null;
+function cpFreePair(){
+  if (!(cpFreeA && cpFreeB)) return null;
+  const MA = MEMBERS.find(x => x.n === cpFreeA);
+  const MB = MEMBERS.find(x => x.n === cpFreeB);
+  if (!MA || !MB) return null;
+  return {n: MA.n + ' × ' + MB.n, a: MA.n, b: MB.n, era: CP_ERA_CN[MA.era], free: true};
+}
+function currentCpPair(){
+  if (cpMode !== 'manual') return null;
+  return cpWay === 'preset' ? cpChosenPair : cpFreePair();
 }
 function renderCpChips(){
+  const presets = CP_PAIRS.filter(c => cpEraSel.has(CP_ERA_NO[c.era]));
+  $('cp-preset-chips').innerHTML = presets.map(c => {
+    const on = !!(cpChosenPair && cpChosenPair.n === c.n);
+    return '<button type="button" class="cp-chip' + (on ? ' active' : '') + '" data-cp="' + c.n + '">' +
+             c.n + '<span class="chip-sub">' + c.a + ' · ' + c.b + '</span></button>';
+  }).join('');
+  Array.prototype.forEach.call($('cp-preset-chips').querySelectorAll('.cp-chip'), btn => {
+    btn.onclick = () => {
+      cpChosenPair = CP_PAIRS.find(c => c.n === btn.dataset.cp) || null;
+      cpFreeA = null; cpFreeB = null;
+      afterCpPick();
+    };
+  });
+
   const pool = cpMemberPool().filter(m => cpEraSel.has(m.era));
   $('cp-member-chips').innerHTML = pool.map(m => {
-    const on = (cpPickName === m.n);
+    const on = (cpFreeA === m.n || cpFreeB === m.n);
     return '<button type="button" class="cp-chip' + (on ? ' active' : '') + '" data-mem="' + m.n + '">' +
              m.n + '<span class="chip-sub">' + m.g + '</span></button>';
   }).join('');
   Array.prototype.forEach.call($('cp-member-chips').querySelectorAll('.cp-chip'), btn => {
-    btn.onclick = () => {
-      cpPickName = (cpPickName === btn.dataset.mem) ? null : btn.dataset.mem;
-      afterCpPick();
-    };
+    btn.onclick = () => toggleCpMember(btn.dataset.mem);
   });
+}
+function toggleCpMember(name){
+  if (cpFreeA === name){ cpFreeA = cpFreeB; cpFreeB = null; }      // 取消第 1 位，第 2 位顶上
+  else if (cpFreeB === name){ cpFreeB = null; }
+  else if (!cpFreeA){ cpFreeA = name; }
+  else if (!cpFreeB){
+    const MA = MEMBERS.find(x => x.n === cpFreeA);
+    const MB = MEMBERS.find(x => x.n === name);
+    if (!MA || !MB || MA.era !== MB.era){ toast('只支持同代组合哦'); return; }
+    cpFreeB = name;
+  }
+  else { toast('已经选了两位 · 先清掉一位'); return; }
+  cpChosenPair = null;
+  afterCpPick();
 }
 function afterCpPick(){ renderCpChips(); syncCpPicked(); validateForm(); }
 function syncCpPicked(){
-  const m = currentCpMember();
-  $('cp-picked').textContent = m ? ('当前：' + m.n + '（' + m.g + ' · ' + (m.m || 'MBTI 未公开') + '）')
-                                 : '当前：未选择（由系统推一位）';
+  const c = currentCpPair();
+  $('cp-picked').textContent = c ? ('当前：' + c.n + '（' + c.a + ' × ' + c.b + '）')
+                                 : '当前：未选择（由系统推一对）';
 }
 function buildCpPicker(){
   const box = $('cp-manual');
@@ -2026,7 +2095,18 @@ function buildCpPicker(){
       Array.prototype.forEach.call($('cp-mode-tabs').querySelectorAll('.trio-tab'),
         b => b.classList.toggle('active', b === btn));
       box.style.display = (cpMode === 'manual') ? 'block' : 'none';
-      if (cpMode === 'auto') cpPickName = null;
+      if (cpMode === 'auto'){ cpChosenPair = null; cpFreeA = null; cpFreeB = null; }
+      afterCpPick();
+    };
+  });
+  Array.prototype.forEach.call($('cp-way-tabs').querySelectorAll('.trio-tab'), btn => {
+    btn.onclick = () => {
+      cpWay = btn.dataset.way;
+      Array.prototype.forEach.call($('cp-way-tabs').querySelectorAll('.trio-tab'),
+        b => b.classList.toggle('active', b === btn));
+      $('cp-preset-box').style.display = (cpWay === 'preset') ? 'block' : 'none';
+      $('cp-free-box').style.display   = (cpWay === 'free')   ? 'block' : 'none';
+      cpChosenPair = null; cpFreeA = null; cpFreeB = null;
       afterCpPick();
     };
   });
@@ -2036,7 +2116,7 @@ function buildCpPicker(){
       if (cpEraSel.has(e)) cpEraSel.delete(e); else cpEraSel.add(e);
       btn.classList.toggle('active', cpEraSel.has(e));
       if (cpEraSel.size === 0){ toast('至少选一个世代哦'); cpEraSel.add(e); btn.classList.add('active'); }
-      cpPickName = null;
+      cpChosenPair = null; cpFreeA = null; cpFreeB = null;
       afterCpPick();
     };
   });
@@ -2067,14 +2147,14 @@ function submitForm(){
     state.party = [{ name, y:b.y, m:b.m, d:b.d, mbti: picked==='UNKNOWN'?null:picked, isIdol:false }]
                   .concat(collectTrio().list);
   }
-  const cpM = (state.test === 'cp') ? currentCpMember() : null;
-  state.cpPick = cpM ? cpM.n : null;
+  const cpP = (state.test === 'cp') ? currentCpPair() : null;
+  state.cpPickKey = cpP ? cpKey(cpP) : null;
   go('loading');
   $('loading-text').textContent = {
     past:'正在翻开前世那一页…',
     best:'正在排序成员池…',
     trio:'正在画你们三人的关系图…',
-    cp: state.cpPick ? ('正在算你和 ' + state.cpPick + ' 的缘分…') : '正在找和你最合的那一位…'
+    cp: state.cpPickKey ? ('正在算你和这一对的契合…') : '正在找和你最合的那一对…'
   }[state.test];
   setTimeout(renderResult, 1800);
 }
@@ -2441,9 +2521,74 @@ function renderBest(u){
 }
 
 /* ================================================================
- * 本命 CP（1v1）：双轴 · 四象限 · 关系温度 · 冲突剧本 · 每日事件
- * 只算「你 × 一位成员」两个人，页面上不出现第三人
+ * 本命 CP：判断「你和哪一对 CP 更合适」
+ * 页面上只出现这一对的两个人 —— 你作为打分基准，不再画成第三个点
+ * 双轴（共鸣 / 互补）→ 四象限 → 关系温度 → 冲突剧本 → 每日事件
  * ================================================================ */
+const CP_PAIRS = [
+  {n:"凯源", a:"王俊凯", b:"王源",     era:"一代"},
+  {n:"凯千", a:"王俊凯", b:"易烊千玺", era:"一代"},
+  {n:"源千", a:"王源",   b:"易烊千玺", era:"一代"},
+  {n:"祺鑫", a:"马嘉祺", b:"丁程鑫", era:"二代"},
+  {n:"祺轩", a:"马嘉祺", b:"宋亚轩", era:"二代"},
+  {n:"文祺", a:"马嘉祺", b:"刘耀文", era:"二代"},
+  {n:"祺源", a:"马嘉祺", b:"张真源", era:"二代"},
+  {n:"祺翔", a:"马嘉祺", b:"严浩翔", era:"二代"},
+  {n:"祺霖", a:"马嘉祺", b:"贺峻霖", era:"二代"},
+  {n:"鑫轩", a:"丁程鑫", b:"宋亚轩", era:"二代"},
+  {n:"文鑫", a:"丁程鑫", b:"刘耀文", era:"二代"},
+  {n:"鑫源", a:"丁程鑫", b:"张真源", era:"二代"},
+  {n:"鑫翔", a:"丁程鑫", b:"严浩翔", era:"二代"},
+  {n:"鑫霖", a:"丁程鑫", b:"贺峻霖", era:"二代"},
+  {n:"文轩", a:"刘耀文", b:"宋亚轩", era:"二代"},
+  {n:"真文", a:"刘耀文", b:"张真源", era:"二代"},
+  {n:"文严文", a:"刘耀文", b:"严浩翔", era:"二代"},
+  {n:"文霖", a:"刘耀文", b:"贺峻霖", era:"二代"},
+  {n:"源轩", a:"宋亚轩", b:"张真源", era:"二代"},
+  {n:"银河系闪耀星", a:"宋亚轩", b:"严浩翔", era:"二代"},
+  {n:"霖轩", a:"宋亚轩", b:"贺峻霖", era:"二代"},
+  {n:"翔源", a:"张真源", b:"严浩翔", era:"二代"},
+  {n:"源霖", a:"张真源", b:"贺峻霖", era:"二代"},
+  {n:"翔霖", a:"严浩翔", b:"贺峻霖", era:"二代"},
+  {n:"朱苏",     a:"朱志鑫", b:"苏新皓", era:"三代"},
+  {n:"志极",     a:"朱志鑫", b:"张极",   era:"三代"},
+  {n:"志禹",     a:"朱志鑫", b:"张泽禹", era:"三代"},
+  {n:"鑫之左想", a:"朱志鑫", b:"左航",   era:"三代"},
+  {n:"双鑫",     a:"朱志鑫", b:"邓佳鑫", era:"三代"},
+  {n:"豪志",     a:"朱志鑫", b:"张峻豪", era:"三代"},
+  {n:"朱余",     a:"朱志鑫", b:"余宇涵", era:"三代"},
+  {n:"朱穆",     a:"朱志鑫", b:"穆祉丞", era:"三代"},
+  {n:"极禹",     a:"张极",   b:"张泽禹", era:"三代"},
+  {n:"极航",     a:"张极",   b:"左航",   era:"三代"},
+  {n:"极丞",     a:"张极",   b:"穆祉丞", era:"三代"},
+  {n:"航禹",     a:"左航",   b:"张泽禹", era:"三代"},
+  {n:"新禹",     a:"苏新皓", b:"张泽禹", era:"三代"},
+  {n:"朔佳",     a:"黄朔",   b:"邓佳鑫", era:"三代"}
+];
+const CP_ERA_CN = {1:'一代', 2:'二代', 3:'三代'};
+const CP_ERA_NO = {'一代':1, '二代':2, '三代':3};
+function cpKey(p){ return [p.a, p.b].sort().join('|'); }
+/* 自由组合候选：同代 + 已成年 的两两组合（四代与跨代一律不收） */
+function cpFreePairs(){
+  const out = [];
+  [1,2,3].forEach(era => {
+    const pool = MEMBERS.filter(m => m.era === era)
+                        .filter(m => ageOf.apply(null, m.b.split('-').map(Number)) >= 18);
+    for (let i = 0; i < pool.length; i++)
+      for (let j = i + 1; j < pool.length; j++)
+        out.push({n: pool[i].n + ' × ' + pool[j].n, a: pool[i].n, b: pool[j].n,
+                  era: CP_ERA_CN[era], free: true});
+  });
+  return out;
+}
+/* 全部候选：38 对热门名单 + 自由组合（同一组合只出现一次） */
+function cpAllPairs(){
+  const seen = {}, out = [];
+  CP_PAIRS.forEach(p => { seen[cpKey(p)] = 1; out.push(p); });
+  cpFreePairs().forEach(p => { if (!seen[cpKey(p)]) { seen[cpKey(p)] = 1; out.push(p); } });
+  return out;
+}
+
 function memberToParty(x){
   const [y,mo,d] = x.b.split('-').map(Number);
   return {name:x.n, y:y, m:mo, d:d, mbti:x.m || null, isIdol:true};
@@ -2455,236 +2600,355 @@ function mbtiSameCount(a,b){
   for (let i = 0; i < 4; i++) if (a[i] === b[i]) s++;
   return s;
 }
-/* 要测的那一位：自己选 > 系统从成员池里推最合的 */
-function cpPickMember(u){
-  if (state.cpPick){
-    const hit = MEMBERS.find(x => x.n === state.cpPick);
-    if (hit) return {m:hit, picked:true};
-  }
-  const list = scoreAll(u, cpMemberPool());
-  return {m: (list[0] ? list[0].idol : cpMemberPool()[0]), picked:false};
-}
 
-/* ---------- 双轴：共鸣度 / 互补度 ---------- */
-function cpAxes(u, m){
-  const me = profileWithYs({name:u.name, y:u.y, m:u.m, d:u.d, mbti:u.mbti || null, isIdol:false});
-  const he = profileWithYs(memberToParty(m));
-  const e  = edgeOf(me, he);
-  const [hm, hd] = [Number(m.b.split('-')[1]), Number(m.b.split('-')[2])];
-
-  /* 共鸣度：你们有多像、多同频（满分 100） */
+/* 单条边（你 × 一位成员）的双轴 */
+function axisOfEdge(me, he, e, um, ud, hm, hd){
   const ZHI_RES = {yukhap:22, samhap:19, same:17, chung:6,  normal:11};
   const WX_RES  = {same:15, shengWo:11, woSheng:11};
   const res = clamp100(
-      mbtiResonance(me.mbti, he.mbti) / 15 * 32                     // MBTI 0-32
-    + zodiacScore(u.m, u.d, hm, hd) / 11 * 16                       // 星座 0-16
-    + (ZHI_RES[e.zhi] || 11)                                        // 日支 0-22
-    + ((e.tti === 'yukhap' || e.tti === 'samhap') ? 15 : (e.tti === 'same' ? 11 : 7))  // 生肖 0-15
-    + (WX_RES[e.wx] || 5));                                         // 五行 0-15
-
-  /* 互补度：你们的差异有多大、能不能互相补位（满分 100） */
+      mbtiResonance(me.mbti, he.mbti) / 15 * 32
+    + zodiacScore(um, ud, hm, hd) / 11 * 16
+    + (ZHI_RES[e.zhi] || 11)
+    + ((e.tti === 'yukhap' || e.tti === 'samhap') ? 15 : (e.tti === 'same' ? 11 : 7))
+    + (WX_RES[e.wx] || 5));
   const ZHI_COMP = {chung:16, normal:11, samhap:8, yukhap:7, same:4};
   const comp = clamp100(
-      ((e.ysAB === 'xi' && e.ysBA === 'xi') ? 30 : ((e.ysAB === 'xi' || e.ysBA === 'xi') ? 20 : 6))   // 喜用互补 0-30
-    + ((e.wx === 'shengWo' || e.wx === 'woSheng') ? 22 : (e.wx === 'same' ? 5 : 14))                  // 五行相生最能互补 0-22
-    + (4 - mbtiSameCount(me.mbti, he.mbti)) / 4 * 16                                                  // MBTI 差异 0-16
-    + (ZHI_COMP[e.zhi] || 11)                                                                          // 日支差异 0-16
-    + Math.abs(seasonTemp(me.m) - seasonTemp(he.m)) * 16);                                             // 寒暖差异 0-16
-
-  return {me:me, he:he, e:e, res:res, comp:comp};
+      ((e.ysAB === 'xi' && e.ysBA === 'xi') ? 30 : ((e.ysAB === 'xi' || e.ysBA === 'xi') ? 20 : 6))
+    + ((e.wx === 'shengWo' || e.wx === 'woSheng') ? 22 : (e.wx === 'same' ? 5 : 14))
+    + (4 - mbtiSameCount(me.mbti, he.mbti)) / 4 * 16
+    + (ZHI_COMP[e.zhi] || 11)
+    + Math.abs(seasonTemp(me.m) - seasonTemp(he.m)) * 16);
+  return {res:res, comp:comp};
+}
+/* 你 × 一对 CP：两条边取平均，得到这一对的双轴 */
+function cpPairAxes(u, pair){
+  const MA = MEMBERS.find(x => x.n === pair.a);
+  const MB = MEMBERS.find(x => x.n === pair.b);
+  if (!MA || !MB) return null;
+  const me = profileWithYs({name:u.name, y:u.y, m:u.m, d:u.d, mbti:u.mbti || null, isIdol:false});
+  const A = profileWithYs(memberToParty(MA));
+  const B = profileWithYs(memberToParty(MB));
+  const eA = edgeOf(me, A), eB = edgeOf(me, B);
+  const sA = axisOfEdge(me, A, eA, u.m, u.d, A.m, A.d);
+  const sB = axisOfEdge(me, B, eB, u.m, u.d, B.m, B.d);
+  return {
+    me:me, A:A, B:B, eA:eA, eB:eB, sA:sA, sB:sB,
+    res:  Math.round((sA.res  + sB.res)  / 2),
+    comp: Math.round((sA.comp + sB.comp) / 2)
+  };
+}
+/* 系统挑：全部候选里，双轴合计最高的一对 */
+function cpPickPair(u){
+  if (state.cpPickKey){
+    const hit = cpAllPairs().find(p => cpKey(p) === state.cpPickKey);
+    if (hit) return {pair:hit, picked:true};
+  }
+  const all = cpAllPairs().map(p => ({p:p, ax:cpPairAxes(u, p)}))
+                          .filter(x => x.ax);
+  all.sort((x,y) => (y.ax.res + y.ax.comp) - (x.ax.res + x.ax.comp));
+  return {pair: all[0].p, picked:false};
 }
 
 /* ---------- 四象限 ---------- */
-const CP_RES_CUT = 62, CP_COMP_CUT = 56;
+const CP_RES_CUT = 64, CP_COMP_CUT = 58;   // 按 90 组候选的实测分位标定，四档约 31/19/30/20%
 const CP_QUADS = {
   chosen: {name:'天选本命', sub:'又聊得来，又能互相补位', color:'#ff5a8a',
-    text:'你们像是同一套频率上的两个人：既不用费力解释，又刚好能补上对方缺的那一角。这种组合在命盘里不算多见。',
-    tip:'别把它当成理所当然 —— 多留一点只属于你们两个人的时间。'},
+    text:'这一对和你的频率对得很准：两边都不用费力解释，又刚好能补上你缺的那一角。这种组合在命盘里不算多见。',
+    tip:'别把它当成理所当然 —— 多留一点只属于你们的时间。'},
   mirror: {name:'镜像本命', sub:'太像了，舒服但缺点火', color:'#a78bfa',
-    text:'你们的相似度高到有点好笑：喜欢的、受不了的，几乎是同一张清单。好处是省心，难处是没人主动打破惯性。',
+    text:'你和这一对的相似度高到有点好笑：喜欢的、受不了的，几乎是同一张清单。好处是省心，难处是没人主动打破惯性。',
     tip:'一起去试一件都没做过的事 —— 靠事件带来新鲜感，比靠性格更管用。'},
   tension:{name:'张力本命', sub:'不一样，但刚好互相需要', color:'#ffbe3d',
-    text:'你们的节奏不一样，却正好互相补得上：一个往前冲，一个把事兜住。摩擦和火花常常一起来。',
+    text:'你和这一对的节奏不一样，却正好互相补得上：有人往前冲，有人把事兜住。摩擦和火花常常一起来。',
     tip:'有分歧的时候先说需求、再说对错 —— 这组是越吵越亲的类型。'},
   hard:   {name:'高难副本', sub:'需要多花一点耐心', color:'#94a3b8',
-    text:'你们的默认设置差得有点多，误会发生的概率偏高。不过难度高的副本，通关之后的默契也更结实。',
-    tip:'把期待说出口，别让对方猜 —— 这组最怕的不是吵架，是沉默。'}
+    text:'你和这一对的默认设置差得有点多，误会发生的概率偏高。不过难度高的副本，通关之后的默契也更结实。',
+    tip:'把期待说出口，别让人猜 —— 这组最怕的不是吵架，是沉默。'}
 };
 function cpQuad(res, comp){
   const hiR = res >= CP_RES_CUT, hiC = comp >= CP_COMP_CUT;
   return hiR ? (hiC ? CP_QUADS.chosen : CP_QUADS.mirror)
              : (hiC ? CP_QUADS.tension : CP_QUADS.hard);
 }
+/* 为什么是这个象限：拿两条轴的实际分和阈值说话（全正向，不说「不合」） */
+function cpQuadWhy(res, comp){
+  const hiR = res >= CP_RES_CUT, hiC = comp >= CP_COMP_CUT;
+  const R = '共鸣 ' + res + '（线 ' + CP_RES_CUT + '）';
+  const C = '互补 ' + comp + '（线 ' + CP_COMP_CUT + '）';
+  if (hiR && hiC)
+    return R + '、' + C + ' 两条都过线 —— 既同频又能互相补位，所以落在天选本命这一格。';
+  if (hiR)
+    return R + ' 过线了，但' + C + ' 还差 ' + (CP_COMP_CUT - comp) +
+           ' 点 —— 你们太像了，互补这一项没顶上来，所以是镜像本命。';
+  if (hiC)
+    return C + ' 过线了，但' + R + ' 还差 ' + (CP_RES_CUT - res) +
+           ' 点 —— 互相需要是够的，同频度一般，所以是张力本命。';
+  return R + ' 差 ' + (CP_RES_CUT - res) + ' 点、' + C + ' 差 ' + (CP_COMP_CUT - comp) +
+         ' 点，两条都没过线 —— 不是不合，是两套默认设置差得比较多，磨合期会长一点，所以是高难副本。';
+}
 
-/* ---------- 关系温度：黏人 / 嘴硬 / 冷战 / 和好速度 ---------- */
-function cpTemps(u, m, ax){
-  const me = ax.me, he = ax.he, e = ax.e;
-  const [hm, hd] = [Number(m.b.split('-')[1]), Number(m.b.split('-')[2])];
-  const zs = zodiacScore(u.m, u.d, hm, hd);                       // 0-11
+/* ---------- 关系温度（两条边取平均） ---------- */
+function tempsOfEdge(me, he, e, s, um, ud, hm, hd){
+  const zs = zodiacScore(um, ud, hm, hd);
   const zElB = ZODIAC_EL[zodiacIndex(hm, hd)];
-
   const bothF = (me.mbti && he.mbti)
     ? (me.mbti[2] === 'F' && he.mbti[2] === 'F' ? 25
        : (me.mbti[2] === 'F' || he.mbti[2] === 'F' ? 15 : 8)) : 15;
   const ZHI_CLING = {yukhap:30, samhap:26, same:22, chung:12, normal:18};
   const clingy = (ZHI_CLING[e.zhi] || 18)
     + ((e.wx === 'same') ? 20 : ((e.wx === 'shengWo' || e.wx === 'woSheng') ? 14 : 8))
-    + bothF
-    + Math.round(zs / 11 * 25);                                    // 满分 100
+    + bothF + Math.round(zs / 11 * 25);
 
-  const EL_MOUTH = {3:28, 1:20, 0:14, 2:12, 4:8};                  // 金28 火20 木14 土12 水8
+  const EL_MOUTH = {3:28, 1:20, 0:14, 2:12, 4:8};
   const ZOD_MOUTH = {'火':22, '风':18, '土':14, '水':10};
   const ZHI_MOUTH = {chung:28, normal:18, same:12, samhap:14, yukhap:10};
   const mouth = (EL_MOUTH[he.el] || 14)
     + (he.mbti ? (he.mbti[2] === 'T' ? 22 : 12) : 16)
-    + (ZHI_MOUTH[e.zhi] || 18)
-    + (ZOD_MOUTH[zElB] || 14);                                      // 满分 100
+    + (ZHI_MOUTH[e.zhi] || 18) + (ZOD_MOUTH[zElB] || 14);
 
   const bothT = (me.mbti && he.mbti)
     ? (me.mbti[2] === 'T' && he.mbti[2] === 'T' ? 20
        : (me.mbti[2] === 'T' || he.mbti[2] === 'T' ? 14 : 8)) : 14;
-  const cold = Math.round((100 - ax.res) * 0.4)
+  const cold = Math.round((100 - s.res) * 0.4)
     + ((e.wx === 'keWo' || e.wx === 'woKe') ? 25 : (e.wx === 'same' ? 10 : 16))
-    + bothT
-    + (e.zhi === 'chung' ? 15 : 8);                                 // 满分 100
+    + bothT + (e.zhi === 'chung' ? 15 : 8);
 
   const ZHI_FIX = {yukhap:25, samhap:20, same:16, chung:8, normal:13};
   const bothF2 = (me.mbti && he.mbti)
     ? (me.mbti[2] === 'F' && he.mbti[2] === 'F' ? 22
        : (me.mbti[2] === 'F' || he.mbti[2] === 'F' ? 16 : 10)) : 16;
-  const fix = Math.round(ax.comp * 0.35)
-    + (ZHI_FIX[e.zhi] || 13)
-    + bothF2
-    + ((e.wx === 'shengWo' || e.wx === 'woSheng') ? 18 : (e.wx === 'same' ? 12 : 8));  // 满分 100
+  const fix = Math.round(s.comp * 0.35)
+    + (ZHI_FIX[e.zhi] || 13) + bothF2
+    + ((e.wx === 'shengWo' || e.wx === 'woSheng') ? 18 : (e.wx === 'same' ? 12 : 8));
 
   return {clingy:clamp100(clingy), mouth:clamp100(mouth), cold:clamp100(cold), fix:clamp100(fix)};
 }
+function cpPairTemps(u, ax){
+  const tA = tempsOfEdge(ax.me, ax.A, ax.eA, ax.sA, u.m, u.d, ax.A.m, ax.A.d);
+  const tB = tempsOfEdge(ax.me, ax.B, ax.eB, ax.sB, u.m, u.d, ax.B.m, ax.B.d);
+  return {
+    clingy: Math.round((tA.clingy + tB.clingy) / 2),
+    mouth:  Math.round((tA.mouth  + tB.mouth)  / 2),
+    cold:   Math.round((tA.cold   + tB.cold)   / 2),
+    fix:    Math.round((tA.fix    + tB.fix)    / 2)
+  };
+}
 const CP_TEMP_TEXT = {
-  clingy: ['属于「没事也想发条消息」的那种 —— 见面频率一低，就会开始想念。',
+  clingy: ['属于「没事也想发条消息」的那种 —— 联系一断，就会开始想念。',
            '黏得刚刚好：想见就见，各忙各的时候也不焦虑。',
-           '彼此都留足了独处空间 —— 不联系，不代表不在乎。'],
+           '彼此都留足了空间 —— 不联系，不代表不在乎。'],
   mouth:  ['心里在意得要命，嘴上偏要说一句「还行吧」。',
            '偶尔嘴硬一下，被戳穿了倒也认得挺快。',
            '情绪基本写在脸上，不太会绕弯子。'],
-  cold:   ['吵完会先各自冷静一阵子 —— 给彼此留点时间，反而好得快。',
+  cold:   ['闹别扭会先各自冷静一阵子 —— 给彼此留点时间，反而好得快。',
            '僵持的时间不长，通常隔天就开始找话说了。',
-           '基本不过夜 —— 吵完没多久，就有人先开口。'],
+           '基本不过夜 —— 没多久就有人先开口。'],
   fix:    ['和好很快 —— 往往一个表情包就能翻篇。',
            '需要一个台阶，给了就能顺着下来。',
            '和好慢一点，但一旦翻篇，会比之前更稳。']
 };
 function cpTempLevel(v){ return v >= 66 ? 0 : (v >= 36 ? 1 : 2); }
 
-/* ---------- 冲突剧本：最可能因为什么吵 + 和好任务 ---------- */
+/* ---------- 冲突剧本：这一对各自的一句立场 + 破局 ---------- */
 const CP_TASKS = [
-  '给他发一条只有你们懂的暗号，不用解释，等他自己接。',
-  '把今天看到的一件小事拍下来发给他，配一句「这个很像你」。',
-  '主动约一件具体的事 —— 时间地点都写清楚，别让他猜。',
+  '给他们发一条只有你们懂的暗号，不用解释，等他们自己接。',
+  '把今天看到的一件小事拍下来发过去，配一句「这个很像你们」。',
+  '主动约一件具体的事 —— 时间地点都写清楚，别让人猜。',
   '先说一句「我刚才语气不太好」，后面的话会顺很多。',
-  '点一杯他自己不会点、但你记得他喝过的东西。',
-  '把他之前提过的一句话复述给他听 —— 他会知道你有在听。',
+  '点一杯他们不会点、但你记得他们喝过的东西。',
+  '把他们之前提过的一句话复述一遍 —— 他们会知道你有在听。',
   '一起做一件不用说话的事：散步、拼图、看同一场演出。',
-  '给他一个台阶：问一个只有他能回答的问题。'
+  '给个台阶：问一个只有他们能回答的问题。'
 ];
-function cpConflict(u, m, ax){
-  const me = ax.me, he = ax.he, e = ax.e;
+/* 单个成员 vs 你：最容易起摩擦的那句话 */
+function cpStance(me, he){
   const H = he.name;
-  let topic, lines;
-
-  const dim = (me.mbti && he.mbti)
-    ? [2,3,0,1].find(i => me.mbti[i] !== he.mbti[i])   // T/F 最容易吵，其次 J/P、E/I、S/N
-    : undefined;
-
-  if (dim === 2){
-    const uT = me.mbti[2] === 'T';
-    const talkLogic = uT ? '你' : H, talkFeel = uT ? H : '你';
-    topic = '讲道理 vs 讲感受';
-    lines = [
-      {who:talkLogic,   text:'把事情拆成一条一条，想先把问题本身解决掉。'},
-      {who:talkFeel,    text:'在意的其实不是方案，是对方说话时的那点语气。'},
-      {who:'然后',       text:'先接住语气，再讲道理 —— 顺序错了，道理越对越伤人。'}
-    ];
-  } else if (dim === 3){
-    const uJ = me.mbti[3] === 'J';
-    const planner = uJ ? '你' : H, goWithFlow = uJ ? H : '你';
-    topic = '计划 vs 随性';
-    lines = [
-      {who:planner,     text:'提前三天就把行程定好了，连几点集合都写清楚。'},
-      {who:goWithFlow,  text:'觉得「到时候再说」才是对的，计划太满反而累。'},
-      {who:'然后',       text:'留一半给计划、留一半给临时起意 —— 这组最舒服的比例。'}
-    ];
-  } else if (dim === 0){
-    const uE = me.mbti[0] === 'E';
-    const out = uE ? '你' : H, home = uE ? H : '你';
-    topic = '出门 vs 宅着';
-    lines = [
-      {who:out,   text:'觉得见面就得出去逛一圈，不然等于没见。'},
-      {who:home,  text:'觉得待在同一个空间里各干各的，就已经很好了。'},
-      {who:'然后', text:'一个跟着出门、一个陪着宅家，轮流来，谁都不用委屈。'}
-    ];
-  } else if (dim === 1){
-    const uS = me.mbti[1] === 'S';
-    const detail = uS ? '你' : H, feel = uS ? H : '你';
-    topic = '细节 vs 感觉';
-    lines = [
-      {who:detail, text:'讲的是具体的时间、地点、哪一家店。'},
-      {who:feel,   text:'讲的是整体氛围，觉得差不多就行。'},
-      {who:'然后',  text:'细节交给一个，方向交给另一个 —— 分工明确就不吵了。'}
-    ];
-  } else {
-    // 没有 MBTI 或四个字母全同：退回五行 / 日支
-    const ae = EL_IMAGE[me.el], be = EL_IMAGE[he.el];
-    if (e.wx === 'keWo' || e.wx === 'woKe'){
-      topic = '节奏对不上';
-      lines = [
-        {who:'你', text:'你的' + ae.name + '习惯' + ae.verb + '，想快点往前推进。'},
-        {who:H,   text:'他的' + be.name + '习惯' + be.verb + '，需要先缓一缓。'},
-        {who:'然后', text:'一个负责踩油门、一个负责踩刹车 —— 车速反而最稳。'}
-      ];
-    } else if (e.zhi === 'chung'){
-      topic = '谁先让步';
-      lines = [
-        {who:'你', text:'觉得自己已经退了一步，等对方也退一步。'},
-        {who:H,   text:'也在等 —— 两个人都觉得先开口的是自己。'},
-        {who:'然后', text:'这组的破局点很简单：谁先发一句话，谁就赢了。'}
-      ];
-    } else {
-      topic = '表达方式不一样';
-      lines = [
-        {who:'你', text:'习惯把事情说清楚，觉得说出来才算数。'},
-        {who:H,   text:'习惯让对方自己体会，觉得说出来就没意思了。'},
-        {who:'然后', text:'把「你应该懂」换成「我告诉你」—— 误会立刻少一半。'}
-      ];
-    }
+  if (me.mbti && he.mbti){
+    const dim = [2,3,0,1].find(i => me.mbti[i] !== he.mbti[i]);
+    if (dim === 2)
+      return {who:H, dim:2, text: he.mbti[2] === 'T'
+        ? '习惯先把事情拆开讲清楚，方案对了才算解决。'
+        : '先在意语气和感受，方案对不对是第二步。'};
+    if (dim === 3)
+      return {who:H, dim:3, text: he.mbti[3] === 'J'
+        ? '想把时间地点提前定好，心里才踏实。'
+        : '更信「到时候再说」，计划排太满反而累。'};
+    if (dim === 0)
+      return {who:H, dim:0, text: he.mbti[0] === 'E'
+        ? '觉得见面就得出去逛一圈，不然等于没见。'
+        : '待在同一个空间各干各的，就已经很好了。'};
+    if (dim === 1)
+      return {who:H, dim:1, text: he.mbti[1] === 'S'
+        ? '讲的是具体的时间、地点、哪一家店。'
+        : '讲的是整体氛围，差不多就行。'};
+    // 四个字母完全一致：不是没脾气，是摩擦点不在性格上
+    const be0 = EL_IMAGE[he.el];
+    return {who:H, dim:-1, text:'四个字母和你完全一致 —— TA 很少跟你正面起冲突，' +
+      '真要卡住，多半卡在节奏上（偏' + be0.name + '：' + be0.verb + '）。'};
   }
-  return {topic:topic, lines:lines, task: CP_TASKS[hash(u.name + '|' + m.n) % CP_TASKS.length]};
+  const be = EL_IMAGE[he.el];
+  return {who:H, dim:-1, text:'节奏偏' + be.name + '：' + be.verb + '，跟你默认的速度不太一样。'};
+}
+const CP_TOPIC = {2:'讲道理 vs 讲感受', 3:'计划 vs 随性', 0:'出门 vs 宅着', 1:'细节 vs 感觉'};
+const CP_END = {
+  2:'先接住感受，再讲道理 —— 顺序对了，谁都不委屈。',
+  3:'留一半给计划、留一半给临时起意 —— 这组最舒服的比例。',
+  0:'一次跟着出门、一次陪着宅家，轮流来，谁都不用将就。',
+  1:'细节交给一个、方向交给另一个 —— 分工明确就不吵了。'
+};
+function cpConflict(u, pair, ax){
+  const me = ax.me;
+  const lA = cpStance(me, ax.A), lB = cpStance(me, ax.B);
+  // 主题：取两人里优先级最高的那个摩擦维度（T/F > J/P > E/I > S/N）
+  const dims = [lA.dim, lB.dim].filter(d => d >= 0);
+  const dim = [2,3,0,1].find(d => dims.indexOf(d) >= 0);
+  let topic, end;
+  if (dim === undefined){
+    topic = '节奏对不上';
+    end = '一个负责踩油门、一个负责踩刹车 —— 车速反而最稳。';
+  } else {
+    topic = CP_TOPIC[dim];
+    end = CP_END[dim];
+  }
+  return {
+    topic:topic,
+    lines:[lA, lB, {who:'然后', text:end}],
+    task: CP_TASKS[hash(u.name + '|' + pair.n) % CP_TASKS.length]
+  };
 }
 
-/* ---------- 每日关系事件（按日期 + 成员取，每天不同） ---------- */
+/* ================================================================
+ * 这一对 CP 的关系张力：A 与 B 两个人之间到底是什么化学反应
+ * 先摆事实（五行 / 日支 / 生肖 / MBTI / 星座 / 季节），
+ * 再定张力类型，最后写「放在一起是什么画面」+「你会被什么勾住」
+ * ================================================================ */
+const CP_TENSIONS = ['咬合型','供能型','拉扯型','镜像型','一进一退','讲理 · 讲情','排期 · 即兴','平行型'];
+const CP_TENSION_SUB = {
+  '咬合型':    '天然对得上，不用磨合',
+  '供能型':    '一个给得起，一个接得住',
+  '拉扯型':    '两种力量互相拽着',
+  '镜像型':    '太像了，缺少推拉',
+  '一进一退':  '一个往外撑，一个往里收',
+  '讲理 · 讲情':   '一个讲道理，一个讲感受',
+  '排期 · 即兴':'一个要排期，一个要留白',
+  '平行型':    '各成一段，互不干扰'
+};
+function cpTension(ax){
+  const A = ax.A, B = ax.B;
+  const e = edgeOf(A, B);                 // A-B 这一条边（他们俩之间）
+  const E = ELEMENTS;
+  const AV = EL_IMAGE[A.el], BV = EL_IMAGE[B.el];
+  const An = A.name, Bn = B.name;
+  const zA = ZODIAC_EL[zodiacIndex(A.m, A.d)], zB = ZODIAC_EL[zodiacIndex(B.m, B.d)];
+  const zAn = zodiacOf(A.m, A.d), zBn = zodiacOf(B.m, B.d);
+  const same = mbtiSameCount(A.mbti, B.mbti);
+
+  /* ---- 1) 事实层：他们之间的底子 ---- */
+  const base = [];
+  if (e.wx === 'same')
+    base.push('两人都是' + E[A.el] + '性（' + AV.verb + '），底子是同一种气息。');
+  else if (e.wx === 'woSheng')
+    base.push(An + '的' + E[A.el] + '（' + AV.verb + '）生养着' + Bn + '的' + E[B.el] +
+              ' —— 这是一条单向流动的能量线。');
+  else if (e.wx === 'shengWo')
+    base.push(Bn + '的' + E[B.el] + '（' + BV.verb + '）生养着' + An + '的' + E[A.el] +
+              ' —— 这是一条单向流动的能量线。');
+  else
+    base.push(An + '的' + E[A.el] + '（' + AV.verb + '）和' + Bn + '的' + E[B.el] + '（' + BV.verb +
+              '）是两种速度。');
+
+  if (e.zhi === 'yukhap')      base.push('日支正好六合，像两片咬合的齿轮。');
+  else if (e.zhi === 'samhap') base.push('日支同属三合一组，节奏天然对得上。');
+  else if (e.zhi === 'same')   base.push('日支一模一样，想到一块去的概率很高。');
+  else if (e.zhi === 'chung')  base.push('日支正对 —— 这两人是互相拽着的那种关系。');
+
+  if (e.tti === 'yukhap')      base.push('生肖' + ANIMALS[A.ani] + '与' + ANIMALS[B.ani] + '是六合组。');
+  else if (e.tti === 'samhap') base.push('生肖' + ANIMALS[A.ani] + '与' + ANIMALS[B.ani] + '同属三合一组。');
+  else if (e.tti === 'same')   base.push('两人都属' + ANIMALS[A.ani] + '。');
+
+  /* ---- 2) 定类型 ---- */
+  const ei = (A.mbti && B.mbti) && A.mbti[0] !== B.mbti[0];
+  const jp = (A.mbti && B.mbti) && A.mbti[3] !== B.mbti[3];
+  const tf = (A.mbti && B.mbti) && A.mbti[2] !== B.mbti[2];
+  /* 日支冲是最强的张力信号，其次看 MBTI 的三个维度差，五行只在前面都不成立时兜底 */
+  let type;
+  if (e.zhi === 'chung')                             type = '拉扯型';
+  else if (e.zhi === 'yukhap' || e.zhi === 'samhap') type = '咬合型';
+  else if (ei)                                       type = '一进一退';
+  else if (tf)                                       type = '讲理 · 讲情';
+  else if (jp)                                       type = '排期 · 即兴';
+  else if (e.wx === 'shengWo' || e.wx === 'woSheng') type = '供能型';
+  else if (e.wx === 'same' && same >= 3)             type = '镜像型';
+  else if (e.wx === 'keWo' || e.wx === 'woKe')       type = '拉扯型';
+  else                                               type = '平行型';
+
+  /* ---- 3) 张力从哪来 ---- */
+  let pull;
+  if (A.mbti && B.mbti){
+    if (same >= 4)     pull = 'MBTI 四个字母完全一致 —— 他们之间的张力不在性格上，而在节奏：谁先动、谁跟着动。';
+    else if (ei)       pull = '一个' + (A.mbti[0] === 'E' ? '往外撑场子' : '往里收着') + '，另一个' +
+                              (B.mbti[0] === 'E' ? '往外撑场子' : '往里收着') + ' —— 张力来自这个方向差。';
+    else if (tf)       pull = '一个更讲道理（' + (A.mbti[2] === 'T' ? An : Bn) + '），一个更讲感受（' +
+                              (A.mbti[2] === 'T' ? Bn : An) + '）—— 张力来自处理事情的顺序不同。';
+    else if (jp)       pull = '一个想把事排好（' + (A.mbti[3] === 'J' ? An : Bn) + '），一个想留点余地（' +
+                              (A.mbti[3] === 'J' ? Bn : An) + '）—— 张力来自「要不要先定下来」。';
+    else               pull = 'MBTI 上有 ' + same + ' 个字母重合 —— 他们之间的张力不大，更多是互相顺着。';
+  } else {
+    pull = '有一方的 MBTI 还没公开，这一层张力只能从节奏上看：一个偏' + AV.name + '、一个偏' + BV.name + '。';
+  }
+  if (zA !== zB)
+    pull += ' 星座上' + zA + '象（' + zAn + '）配' + zB + '象（' + zBn + '），表达方式本来就不是一路的。';
+
+  /* ---- 4) 放在一起是什么画面 ---- */
+  const SCENE = {
+    '咬合型':    '画面通常是：一个刚起头，另一个已经把下句接上了 —— 顺得像排练过。',
+    '供能型':    '画面通常是：一个抛出来，另一个稳稳接住，中间几乎没有抢话。',
+    '拉扯型':    '画面通常是：一个先起头往前冲，另一个把节奏按住 —— 谁也盖不过谁，反而一直有戏看。',
+    '镜像型':    '画面是安静的：不会吵，也不太会被激起新的东西 —— 舒服，但容易停在原地。',
+    '一进一退':  '画面通常是：一个在说、一个在听，场子被撑开又被收回来，两边都不累。',
+    '讲理 · 讲情':   '画面通常是：一个在拆问题，另一个先在收情绪 —— 顺序对上了就顺，对不上就卡一下。',
+    '排期 · 即兴':'画面通常是：一个把行程排好，另一个临场改一点点 —— 最后反而比原计划更顺。',
+    '平行型':    '画面是：各忙各的，抬头聊两句也接得上，不需要时刻对齐。'
+  };
+  /* ---- 5) 你会被什么勾住 ---- */
+  const ATTRACT = {
+    '咬合型':    '你会被勾住的大概是那种严丝合缝 —— 你像在看一件已经完成的作品。',
+    '供能型':    '你会被勾住的是那种看得见的照顾 —— 谁在付出、谁在被接住，一眼就看得出来。',
+    '拉扯型':    '你会被勾住的是那种随时在看对方下一步的紧绷感 —— 光看着就不无聊。',
+    '镜像型':    '你会被勾住的是那种不用翻译的整齐 —— 他们的反应你看一遍就懂。',
+    '一进一退':  '你会被勾住的是那种天然分工 —— 你不用替谁担心会不会冷场。',
+    '讲理 · 讲情':   '你会被勾住的是那种互补的次序 —— 一个把事讲清，一个把人安顿好。',
+    '排期 · 即兴':'你会被勾住的是那种弹性 —— 计划不会僵，即兴也不会乱。',
+    '平行型':    '你会被勾住的是那种互不打扰的自在 —— 不用替他们操心合不合。'
+  };
+  const lines = base.concat([pull, SCENE[type]]);
+  return {type:type, name:type, sub:CP_TENSION_SUB[type], lines:lines, attract:ATTRACT[type], eAB:e};
+}
+
+/* ---------- 每日关系事件 ---------- */
 const CP_DAILY = [
-  {e:'☀️', t:'今日适合主动',   d:'今天你先开口的那句话，他会记得比较久。'},
-  {e:'🎧', t:'今日适合共享',   d:'把你在听的歌丢给他，不用多解释，他会懂。'},
-  {e:'🍜', t:'今日适合约饭',   d:'别问「吃什么」，直接报一家店 —— 今天他懒得选。'},
+  {e:'☀️', t:'今日适合主动',   d:'今天你先开口的那句话，他们会记得比较久。'},
+  {e:'🎧', t:'今日适合共享',   d:'把你在听的歌丢过去，不用多解释，他们会懂。'},
+  {e:'🍜', t:'今日适合约饭',   d:'别问「吃什么」，直接报一家店 —— 今天他们懒得选。'},
   {e:'🌙', t:'今日适合晚安',   d:'睡前那句消息，今天就别省了。'},
-  {e:'📷', t:'今日适合记录',   d:'随手拍一张发给他，配一句没头没尾的话。'},
-  {e:'🎁', t:'今日适合小惊喜', d:'带一样他提过一嘴的小东西，今天效果翻倍。'},
+  {e:'📷', t:'今日适合记录',   d:'随手拍一张发过去，配一句没头没尾的话。'},
+  {e:'🎁', t:'今日适合小惊喜', d:'带一样他们提过一嘴的小东西，今天效果翻倍。'},
   {e:'🫧', t:'今日适合留白',   d:'今天不用找话题，各忙各的也是一种相处。'},
   {e:'🎮', t:'今日适合并肩',   d:'一起做点不用动脑的事，比聊天更容易靠近。'},
   {e:'✍️', t:'今日适合说清',   d:'有没说出口的期待，今天就写清楚发出去。'},
-  {e:'🌧', t:'今日适合体谅',   d:'他今天的电量偏低 —— 别追着问「怎么了」。'},
-  {e:'🔥', t:'今日适合直球',   d:'想他了就直接说，今天绕弯子容易被误会。'},
+  {e:'🌧', t:'今日适合体谅',   d:'他们今天的电量偏低 —— 别追着问「怎么了」。'},
+  {e:'🔥', t:'今日适合直球',   d:'想见就直接说，今天绕弯子容易被误会。'},
   {e:'🧭', t:'今日适合计划',   d:'把下一次见面的时间定下来，今天定的最算数。'},
-  {e:'🪞', t:'今日适合复盘',   d:'回想一件他为你做的小事，说出来效果很好。'},
+  {e:'🪞', t:'今日适合复盘',   d:'回想一件他们为你做的小事，说出来效果很好。'},
   {e:'🎬', t:'今日适合同看',   d:'同一场演出、同一个片子 —— 明天就有话聊了。'},
-  {e:'🧸', t:'今日适合示弱',   d:'说一句「今天有点累」，他会比平时更靠近一点。'},
+  {e:'🧸', t:'今日适合示弱',   d:'说一句「今天有点累」，他们会比平时更靠近一点。'},
   {e:'🍀', t:'今日适合新尝试', d:'约一件你们都没做过的事，今天的成功率最高。'}
 ];
-function cpDaily(u, m){
+function cpDaily(u, pair){
   const now = new Date();
   const p = n => String(n).padStart(2, '0');
   const key = now.getFullYear() + '-' + p(now.getMonth() + 1) + '-' + p(now.getDate());
-  const it = CP_DAILY[hash(key + '|' + m.n + '|' + u.name) % CP_DAILY.length];
-  return {date:key, item:it};
+  return {date:key, item: CP_DAILY[hash(key + '|' + pair.n + '|' + u.name) % CP_DAILY.length]};
 }
 
 /* ---------- 双轴图 ---------- */
@@ -2694,12 +2958,11 @@ function cpAxesSVG(res, comp, label){
   const py = v => Y1 - v / 100 * (Y1 - Y0);
   const cx = px(CP_COMP_CUT), cy = py(CP_RES_CUT);
   const rect = (x,y,w,h,f) => '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + f + '"/>';
-
   const bg =
-      rect(X0, Y0, cx - X0, cy - Y0, '#efe4ff') +      // 左上 镜像本命
-      rect(cx, Y0, X1 - cx, cy - Y0, '#ffdee9') +      // 右上 天选本命
-      rect(X0, cy, cx - X0, Y1 - cy, '#eceff3') +      // 左下 高难副本
-      rect(cx, cy, X1 - cx, Y1 - cy, '#ffeccc');       // 右下 张力本命
+      rect(X0, Y0, cx - X0, cy - Y0, '#efe4ff') +
+      rect(cx, Y0, X1 - cx, cy - Y0, '#ffdee9') +
+      rect(X0, cy, cx - X0, Y1 - cy, '#eceff3') +
+      rect(cx, cy, X1 - cx, Y1 - cy, '#ffeccc');
   const frame = '<rect x="' + X0 + '" y="' + Y0 + '" width="' + (X1 - X0) + '" height="' + (Y1 - Y0) +
                 '" fill="none" stroke="#1c1917" stroke-width="2.5" rx="6"/>';
   const cross =
@@ -2716,7 +2979,6 @@ function cpAxesSVG(res, comp, label){
       '<text x="' + ((X0 + X1) / 2) + '" y="' + (Y1 + 24) + '" text-anchor="middle" font-size="12" font-weight="900" fill="#1c1917">互补度 →</text>' +
       '<text x="' + (X0 - 14) + '" y="' + ((Y0 + Y1) / 2) + '" text-anchor="middle" font-size="12" font-weight="900" fill="#1c1917" ' +
         'transform="rotate(-90 ' + (X0 - 14) + ' ' + ((Y0 + Y1) / 2) + ')">共鸣度 →</text>';
-
   const X = px(comp), Y = py(res);
   const ly = Math.max(Y0 + 14, Y - 24);
   const dot =
@@ -2727,37 +2989,44 @@ function cpAxesSVG(res, comp, label){
       '<circle cx="' + X + '" cy="' + Y + '" r="15" fill="#ff5a8a" stroke="#1c1917" stroke-width="3"/>' +
       '<circle cx="' + X + '" cy="' + Y + '" r="6" fill="#fff"/>' +
       '<text x="' + X + '" y="' + ly + '" text-anchor="middle" font-size="12" font-weight="900" fill="#1c1917">' + label + '</text>';
-
   return '<svg viewBox="0 0 400 300" class="cp-axes" role="img" aria-label="共鸣度与互补度双轴图">' +
          bg + frame + cross + labs + axis + dot + '</svg>';
 }
 
 /* ---------- 渲染 ---------- */
 function renderCp(u){
-  const pick = cpPickMember(u);
-  const m = pick.m;
-  const ax = cpAxes(u, m);
+  const pick = cpPickPair(u);
+  const pair = pick.pair;
+  const ax = cpPairAxes(u, pair);
+  if (!ax) return '<div class="result-card"><p>暂无可匹配的 CP。</p></div>';
   const q  = cpQuad(ax.res, ax.comp);
-  const tp = cpTemps(u, m, ax);
-  const cf = cpConflict(u, m, ax);
-  const dy = cpDaily(u, m);
-  const [iy, im, id] = m.b.split('-').map(Number);
-  const age = ageOf(iy, im, id);
+  const tp = cpPairTemps(u, ax);
+  const cf = cpConflict(u, pair, ax);
+  const dy = cpDaily(u, pair);
 
-  const row = (key, name, val, color) => {
-    const txt = CP_TEMP_TEXT[key][cpTempLevel(val)];
-    return '<div class="cp-temp-row">' +
+  /* 这一对之间的关系张力 */
+  const tn = cpTension(ax);
+  const flavorCard =
+      '<div class="cp-flavor">' +
+        '<div class="cp-flavor-head">' +
+          '<span class="cp-flavor-name">「' + tn.name + '」</span>' +
+          '<span class="cp-flavor-sub">' + tn.sub + '</span>' +
+        '</div>' +
+        tn.lines.map(l => '<p>' + l + '</p>').join('') +
+        '<p class="cp-flavor-attract">💫 ' + tn.attract + '</p>' +
+      '</div>';
+
+  const row = (key, name, val, color) =>
+      '<div class="cp-temp-row">' +
         '<span class="cp-temp-name">' + name + '</span>' +
         '<span class="cp-temp-bar"><span style="width:' + val + '%;background:' + color + '"></span></span>' +
         '<span class="cp-temp-val">' + val + '</span>' +
       '</div>' +
-      '<p class="cp-temp-text">' + txt + '</p>';
-  };
-  const temps =
-      row('clingy', '黏人指数', tp.clingy, '#ff5a8a') +
-      row('mouth',  '嘴硬指数', tp.mouth,  '#a78bfa') +
-      row('cold',   '冷战指数', tp.cold,   '#94a3b8') +
-      row('fix',    '和好速度', tp.fix,    '#7cd38a');
+      '<p class="cp-temp-text">' + CP_TEMP_TEXT[key][cpTempLevel(val)] + '</p>';
+  const temps = row('clingy', '黏人指数', tp.clingy, '#ff5a8a') +
+                row('mouth',  '嘴硬指数', tp.mouth,  '#a78bfa') +
+                row('cold',   '冷战指数', tp.cold,   '#94a3b8') +
+                row('fix',    '和好速度', tp.fix,    '#7cd38a');
 
   const scene = cf.lines.map(l =>
       '<p><span class="who">' + l.who + '：</span>' + l.text + '</p>').join('');
@@ -2765,30 +3034,33 @@ function renderCp(u){
   return '' +
     '<div class="result-card">' +
       '<div class="result-header">' +
-        '<p class="r-eyebrow">本命 CP · 一对一缘分</p>' +
-        '<h2>你 × <span class="accent-name">' + m.n + '</span></h2>' +
+        '<p class="r-eyebrow">本命 CP · 你和哪一对更合适</p>' +
+        '<h2>你 × <span class="accent-name">' + pair.n + '</span></h2>' +
         '<p class="score-label" style="margin-top:10px;">' +
-          m.g + ' · ' + (m.m || 'MBTI 未公开') + ' · ' + age + ' 岁 · ' +
-          (pick.picked ? '你自己选的' : '系统推的') + '</p>' +
+          pair.a + ' × ' + pair.b + ' · ' + pair.era +
+          (pair.free ? ' · 自由组合' : '') + ' · ' + (pick.picked ? '你自己选的' : '系统推的') + '</p>' +
       '</div>' +
-      cpAxesSVG(ax.res, ax.comp, '你 × ' + m.n) +
+      cpAxesSVG(ax.res, ax.comp, pair.n) +
       '<p class="trio-legend">共鸣度 ' + ax.res + ' · 互补度 ' + ax.comp +
         ' · 横轴越往右越互补，纵轴越往上越同频</p>' +
       '<div class="cp-quad">' +
         '<span class="cp-quad-tag" style="background:' + q.color + '">' + q.name + '</span>' +
         '<div class="cp-quad-sub">' + q.sub + '</div>' +
         '<p>' + q.text + '</p>' +
+        '<p class="cp-quad-why">🔍 为什么落在这一格：' + cpQuadWhy(ax.res, ax.comp) + '</p>' +
         '<p class="ts-tip">📌 ' + q.tip + '</p>' +
       '</div>' +
       '<div class="cp-block">' +
-        '<div class="cp-block-title">关系温度</div>' +
-        temps +
+        '<div class="cp-block-title">这一对之间的关系张力 · 什么在吸引你</div>' +
+        flavorCard +
+      '</div>' +
+      '<div class="cp-block">' +
+        '<div class="cp-block-title">关系温度</div>' + temps +
       '</div>' +
       '<div class="cp-block">' +
         '<div class="cp-block-title">最可能因为什么吵</div>' +
         '<div class="cp-scene">' +
-          '<div class="cp-scene-topic">「' + cf.topic + '」</div>' +
-          scene +
+          '<div class="cp-scene-topic">「' + cf.topic + '」</div>' + scene +
         '</div>' +
         '<div class="cp-task">🕊 和好任务：' + cf.task + '</div>' +
       '</div>' +
@@ -2801,17 +3073,17 @@ function renderCp(u){
         '</div>' +
       '</div>' +
       '<div class="cp-mini-actions">' +
-        '<button class="cp-mini-btn" onclick="go(\'input\')">换一位成员再测</button>' +
-        (pick.picked ? '<button class="cp-mini-btn" onclick="cpShowAuto()">看系统推的那位</button>' : '') +
+        '<button class="cp-mini-btn" onclick="go(\'input\')">换一对 CP 再测</button>' +
+        (pick.picked ? '<button class="cp-mini-btn" onclick="cpShowAuto()">看系统推的那对</button>' : '') +
       '</div>' +
       '<div class="r-body">' +
-        '<p class="disclaimer-mini">本页只算你和一位成员的一对一关系，只借用传统干支、五行、星座与 MBTI 符号，不涉及真人关系，不是正统命理、不是科学结论，仅供娱乐想象。</p>' +
+        '<p class="disclaimer-mini">本页比较的是「你和这一对 CP 的契合」，页面只出现这两位成员；CP 为粉丝向趣味称谓，只借用传统干支、五行、星座与 MBTI 符号，不涉及真人关系，不是正统命理、不是科学结论，仅供娱乐想象。</p>' +
       '</div>' +
     '</div>';
 }
 /* 从「自己选的」切回「系统推的」 */
 function cpShowAuto(){
-  state.cpPick = null;
+  state.cpPickKey = null;
   renderResult();
 }
 
