@@ -351,17 +351,29 @@
   }
   .cp-scene { background: #fff5e9; border: 2px dashed #ffcf8a; border-radius: 12px; padding: 13px 15px; }
   .cp-scene-topic { font-size: 14px; font-weight: 900; color: var(--fg); margin-bottom: 6px; }
+  .cp-scene-sub {
+    font-size: 11px; font-weight: 900; color: var(--accent); letter-spacing: .04em;
+    margin-bottom: 4px; padding-top: 8px; border-top: 1px dashed #e8d0b0;
+  }
+  .cp-scene-sub + .cp-scene-sub { margin-top: 6px; }
+  .cp-trigger {
+    font-size: 13px !important; color: #4a423e !important; line-height: 1.75 !important;
+    padding-left: 4px;
+  }
   .cp-scene p { font-size: 13px; color: #4a423e; line-height: 1.9; font-weight: 600; }
   .cp-scene .who { font-weight: 900; color: var(--fg); }
   .cp-task {
     margin-top: 10px; padding: 11px 13px; background: #fff; border: 2px solid var(--border);
     border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--fg); line-height: 1.75;
   }
-  .cp-quad-why {
-    margin-top: 8px !important; padding: 9px 12px; background: #faf7f3;
-    border-radius: 10px; font-size: 12.5px !important; color: #4a423e !important;
-    line-height: 1.75; font-weight: 700 !important;
+  .cp-feel { display: grid; gap: 10px; }
+  .cp-feel-row {
+    display: flex; gap: 10px; align-items: flex-start; background: #fff;
+    border: 2px solid var(--border); border-radius: 12px; padding: 11px 13px;
   }
+  .cp-feel-ico { font-size: 17px; line-height: 1.4; flex: none; }
+  .cp-feel-row p { font-size: 13px; color: #4a423e; line-height: 1.8; font-weight: 600; margin: 0; }
+  .cp-feel-row b { color: var(--fg); font-weight: 900; }
   .cp-why-item p { font-size: 13px; color: #4a423e; margin-top: 6px; line-height: 1.75; font-weight: 600; }
   .cp-flavor {
     background: linear-gradient(135deg, #fff5e9 0%, #ffe6ef 100%);
@@ -2670,21 +2682,36 @@ function cpQuad(res, comp){
   return hiR ? (hiC ? CP_QUADS.chosen : CP_QUADS.mirror)
              : (hiC ? CP_QUADS.tension : CP_QUADS.hard);
 }
-/* 为什么是这个象限：拿两条轴的实际分和阈值说话（全正向，不说「不合」） */
-function cpQuadWhy(res, comp){
-  const hiR = res >= CP_RES_CUT, hiC = comp >= CP_COMP_CUT;
-  const R = '共鸣 ' + res + '（线 ' + CP_RES_CUT + '）';
-  const C = '互补 ' + comp + '（线 ' + CP_COMP_CUT + '）';
-  if (hiR && hiC)
-    return R + '、' + C + ' 两条都过线 —— 既同频又能互相补位，所以落在天选本命这一格。';
-  if (hiR)
-    return R + ' 过线了，但' + C + ' 还差 ' + (CP_COMP_CUT - comp) +
-           ' 点 —— 你们太像了，互补这一项没顶上来，所以是镜像本命。';
-  if (hiC)
-    return C + ' 过线了，但' + R + ' 还差 ' + (CP_RES_CUT - res) +
-           ' 点 —— 互相需要是够的，同频度一般，所以是张力本命。';
-  return R + ' 差 ' + (CP_RES_CUT - res) + ' 点、' + C + ' 差 ' + (CP_COMP_CUT - comp) +
-         ' 点，两条都没过线 —— 不是不合，是两套默认设置差得比较多，磨合期会长一点，所以是高难副本。';
+/* 你和这一对：不列数字，只讲你磕的时候是什么状态、什么感受、
+   为什么被吸引、什么时候会想翻白眼（全正向，不写负面定性） */
+const CP_FEEL = {
+  '天选本命': {
+    state:   '你是「随手一刷就能刷到糖」的状态 —— 不用刻意翻物料，他们自己就会把糖递到你面前。',
+    feel:    '看他们的时候你是放松的：不用替谁着急，也不用担心下一秒会垮。',
+    attract: '吸引你的是那种什么都不用解释就成立的顺 —— 你想要的，他们刚好都有。',
+    annoy:   '唯一的问题是太顺了：没什么戏剧冲突，嗑久了你反而会想「他们能不能吵一架给我看看」。'
+  },
+  '镜像本命': {
+    state:   '你是躺着嗑的那种 —— 舒服、省心，像在看两个熟人的日常。',
+    feel:    '情绪很平：很少有心跳加速的时刻，但也不会被气到，属于安稳路线的快乐。',
+    attract: '吸引你的是那种不用翻译的整齐 —— 他们的反应你一遍就懂，看着特别省力。',
+    annoy:   '久了会缺点火：两个人太像了，没人把对方推出舒适区，你会想替他们安排点新剧情。'
+  },
+  '张力本命': {
+    state:   '你是又爱又想吐槽的那种 —— 一边存图，一边在心里喊「你们能不能好好说话」。',
+    feel:    '情绪起伏最大：上一秒被甜到，下一秒替他们着急，嗑的过程自带剧情。',
+    attract: '吸引你的是那种推拉感 —— 不一样却刚好互相需要，这种关系的看头比一直很甜多得多。',
+    annoy:   '会烦的是他们总不在一个频道上：明明一句话能说清的事，两个人非要绕好几圈。'
+  },
+  '高难副本': {
+    state:   '你是「嘴上说不嗑了、手还在刷新」的状态 —— 恨铁不成钢，但舍不得走。',
+    feel:    '体验是拧巴的：经常看不懂他们的操作，又总觉得哪里还有个点没被你摸到。',
+    attract: '吸引你的是那种解谜感 —— 难度高的副本，一旦看懂了某个瞬间，成就感比别的大得多。',
+    annoy:   '会烦的是误会太多：你以为他们在闹别扭，其实多半只是节奏对不上，看着干着急。'
+  }
+};
+function cpQuadFeel(res, comp){
+  return CP_FEEL[cpQuad(res, comp).name];
 }
 
 /* ---------- 关系温度（两条边取平均） ---------- */
@@ -2796,31 +2823,74 @@ const CP_END = {
   0:'一次跟着出门、一次陪着宅家，轮流来，谁都不用将就。',
   1:'细节交给一个、方向交给另一个 —— 分工明确就不吵了。'
 };
-function cpConflict(u, pair, ax){
+/* 导火索：这一主题下最容易被点着的两件小事 */
+const CP_TRIGGER = {
+  2: ['你把一件烦心事随口讲出来，他立刻开始列解决方案 —— 你要的不是方案。',
+      '他说话的语气稍微硬了一点，你先在意的是"他是不是在怪我"，而不是事情本身。'],
+  3: ['出发前你把行程发过去，他回了一句「到时候再说」。',
+      '约好的时间他卡点出现，下一步去哪儿还没定，你已经在心里排了三个版本。'],
+  0: ['你想拉他出门逛一圈，他觉得两个人待着各干各的就挺好。',
+      '聚会还没热起来他就想撤，你觉得这才刚开始，他已经觉得够了。'],
+  1: ['你在确认几点、哪家店、坐哪趟车，他在说「感觉对了就行」。',
+      '你把安排讲得很细，他听完只回了一个「差不多」，你觉得他没在听。'],
+  '-1':['一件事你想马上定下来，他想再等等看。',
+      '你以为已经说清楚了，他还在原地琢磨 —— 两边都觉得自己在等对方。']
+};
+/* 升温节奏：冷战指数 + 和好速度 分档 */
+function cpHeatText(tp){
+  let s;
+  if (tp.cold >= 66)      s = '这组的吵架属于低频但高强度：平时不怎么起冲突，一旦点着，会先各自冷一阵子。';
+  else if (tp.cold >= 36) s = '属于偶尔拌嘴的那一类：来得快，但也不会拖，一般隔天就开始找话说了。';
+  else                    s = '很少真的吵起来：多数时候一句话就过去了，基本不过夜。';
+  if (tp.fix >= 66)       s += ' 好消息是和好也快 —— 往往一个表情包就能翻篇。';
+  else if (tp.fix >= 36)  s += ' 和好需要一个台阶，给个台阶就能顺着下来。';
+  else                    s += ' 和好慢一点，不过翻篇之后会比之前更稳。';
+  return s;
+}
+/* 吵完之后谁先动：偏软（F / P / 水木）的那位 */
+function cpSofterName(ax){
+  const EL_SOFT = {4:2, 0:1, 2:0, 1:-1, 3:-2};         // 水2 木1 土0 火-1 金-2
+  const sc = [ax.A, ax.B].map(p =>
+      (p.mbti ? ((p.mbti[2] === 'F' ? 2 : 0) + (p.mbti[3] === 'P' ? 1 : 0)) : 1)
+    + (EL_SOFT[p.el] || 0));
+  const i = sc[0] >= sc[1] ? 0 : 1;
+  return {first:[ax.A, ax.B][i].name, second:[ax.A, ax.B][1 - i].name};
+}
+function cpConflict(u, pair, ax, tp){
   const me = ax.me;
   const lA = cpStance(me, ax.A), lB = cpStance(me, ax.B);
   // 主题：取两人里优先级最高的那个摩擦维度（T/F > J/P > E/I > S/N）
   const dims = [lA.dim, lB.dim].filter(d => d >= 0);
   const dim = [2,3,0,1].find(d => dims.indexOf(d) >= 0);
-  let topic, end;
+  let topic, end, trig;
   if (dim === undefined){
     topic = '节奏对不上';
     end = '一个负责踩油门、一个负责踩刹车 —— 车速反而最稳。';
+    trig = CP_TRIGGER[-1];
   } else {
     topic = CP_TOPIC[dim];
     end = CP_END[dim];
+    trig = CP_TRIGGER[dim];
   }
+  const soft = cpSofterName(ax);
+  // 两人立场完全一样时，第二位换一个说法，避免出现两句一模一样的话
+  if (lA.text === lB.text)
+    lB.text = '他和' + lA.who + '在这件事上是站一边的 —— 真吵起来，你反而成了那个少数派。';
   return {
     topic:topic,
-    lines:[lA, lB, {who:'然后', text:end}],
+    triggers:trig,
+    lines:[lA, lB],
+    heat: cpHeatText(tp),
+    after: '通常先开口的是' + soft.first + '，' + soft.second + '也不是记仇的人 —— 只是需要一点时间把情绪放下来。',
+    end: end,
     task: CP_TASKS[hash(u.name + '|' + pair.n) % CP_TASKS.length]
   };
 }
 
 /* ================================================================
  * 这一对 CP 的关系张力：A 与 B 两个人之间到底是什么化学反应
- * 先摆事实（五行 / 日支 / 生肖 / MBTI / 星座 / 季节），
- * 再定张力类型，最后写「放在一起是什么画面」+「你会被什么勾住」
+ * 只给结论 —— 不解释 MBTI / 星座层面的成因，
+ * 内容是「底子（五行 + 日支）+ 三句关系描写（画面 / 主导权 / 看头）+ 你会被什么勾住」
  * ================================================================ */
 const CP_TENSIONS = ['咬合型','供能型','拉扯型','镜像型','一进一退','讲理 · 讲情','排期 · 即兴','平行型'];
 const CP_TENSION_SUB = {
@@ -2862,10 +2932,6 @@ function cpTension(ax){
   else if (e.zhi === 'same')   base.push('日支一模一样，想到一块去的概率很高。');
   else if (e.zhi === 'chung')  base.push('日支正对 —— 这两人是互相拽着的那种关系。');
 
-  if (e.tti === 'yukhap')      base.push('生肖' + ANIMALS[A.ani] + '与' + ANIMALS[B.ani] + '是六合组。');
-  else if (e.tti === 'samhap') base.push('生肖' + ANIMALS[A.ani] + '与' + ANIMALS[B.ani] + '同属三合一组。');
-  else if (e.tti === 'same')   base.push('两人都属' + ANIMALS[A.ani] + '。');
-
   /* ---- 2) 定类型 ---- */
   const ei = (A.mbti && B.mbti) && A.mbti[0] !== B.mbti[0];
   const jp = (A.mbti && B.mbti) && A.mbti[3] !== B.mbti[3];
@@ -2882,35 +2948,50 @@ function cpTension(ax){
   else if (e.wx === 'keWo' || e.wx === 'woKe')       type = '拉扯型';
   else                                               type = '平行型';
 
-  /* ---- 3) 张力从哪来 ---- */
-  let pull;
-  if (A.mbti && B.mbti){
-    if (same >= 4)     pull = 'MBTI 四个字母完全一致 —— 他们之间的张力不在性格上，而在节奏：谁先动、谁跟着动。';
-    else if (ei)       pull = '一个' + (A.mbti[0] === 'E' ? '往外撑场子' : '往里收着') + '，另一个' +
-                              (B.mbti[0] === 'E' ? '往外撑场子' : '往里收着') + ' —— 张力来自这个方向差。';
-    else if (tf)       pull = '一个更讲道理（' + (A.mbti[2] === 'T' ? An : Bn) + '），一个更讲感受（' +
-                              (A.mbti[2] === 'T' ? Bn : An) + '）—— 张力来自处理事情的顺序不同。';
-    else if (jp)       pull = '一个想把事排好（' + (A.mbti[3] === 'J' ? An : Bn) + '），一个想留点余地（' +
-                              (A.mbti[3] === 'J' ? Bn : An) + '）—— 张力来自「要不要先定下来」。';
-    else               pull = 'MBTI 上有 ' + same + ' 个字母重合 —— 他们之间的张力不大，更多是互相顺着。';
-  } else {
-    pull = '有一方的 MBTI 还没公开，这一层张力只能从节奏上看：一个偏' + AV.name + '、一个偏' + BV.name + '。';
-  }
-  if (zA !== zB)
-    pull += ' 星座上' + zA + '象（' + zAn + '）配' + zB + '象（' + zBn + '），表达方式本来就不是一路的。';
-
-  /* ---- 4) 放在一起是什么画面 ---- */
-  const SCENE = {
-    '咬合型':    '画面通常是：一个刚起头，另一个已经把下句接上了 —— 顺得像排练过。',
-    '供能型':    '画面通常是：一个抛出来，另一个稳稳接住，中间几乎没有抢话。',
-    '拉扯型':    '画面通常是：一个先起头往前冲，另一个把节奏按住 —— 谁也盖不过谁，反而一直有戏看。',
-    '镜像型':    '画面是安静的：不会吵，也不太会被激起新的东西 —— 舒服，但容易停在原地。',
-    '一进一退':  '画面通常是：一个在说、一个在听，场子被撑开又被收回来，两边都不累。',
-    '讲理 · 讲情':   '画面通常是：一个在拆问题，另一个先在收情绪 —— 顺序对上了就顺，对不上就卡一下。',
-    '排期 · 即兴':'画面通常是：一个把行程排好，另一个临场改一点点 —— 最后反而比原计划更顺。',
-    '平行型':    '画面是：各忙各的，抬头聊两句也接得上，不需要时刻对齐。'
+  /* ---- 3) 结论式描写：不解释成因，只把这段关系写透（画面 / 主导权 / 看头） ---- */
+  const BODY = {
+    '咬合型': [
+      '他们之间几乎不需要热身 —— 一个刚起头，另一个已经把下句接上了，顺得像排练过。',
+      '主导权是轮着来的：谁状态好谁就带着走，另一个自然跟上，不会有人一直被压着。',
+      '这种关系的看头在"齐"：你的注意力会被那种同步感吸走，而不是被其中某一个人的反应带走。'
+    ],
+    '供能型': [
+      '他们之间是一条单向流动的能量线 —— 一个持续地给，另一个稳稳地接，中间几乎不出现抢话。',
+      '给的那位是主动的一方，节奏由他起；接的那位负责把气氛接住，让它落得下来。',
+      '看头在"照顾"：谁在付出、谁在被接住，你一眼就能看出来，而且两边都不觉得吃亏。'
+    ],
+    '拉扯型': [
+      '这两人是互相拽着的关系 —— 一个往前冲，另一个把节奏按住，谁也盖不过谁。',
+      '主导权一直在换手：这会儿他带着走，下一会儿就被另一个拽回来，所以永远不无聊。',
+      '看头在"较劲"：你能感觉到他们各自都在盯着对方的下一步，这种紧绷感本身就是戏。'
+    ],
+    '镜像型': [
+      '他们太像了 —— 反应速度、处理事情的方式几乎是一个模子，连沉默的节奏都很接近。',
+      '主导权是模糊的：谁都不太去推另一个，结果是两个人都安稳地待在舒适区里。',
+      '看头在"齐整"：他们的反应你不用翻译，一遍就懂；代价是少了一点被激起的新东西。'
+    ],
+    '一进一退': [
+      '这两人是一个往外撑、一个往里收的组合 —— 场子被撑开，又被收回来，来回之间刚好平衡。',
+      '主导权跟着场合走：需要有人出面时他上，需要安静下来时另一个接，很少撞车。',
+      '看头在"分工"：你不用替谁担心会不会冷场，因为总有一个人把场子撑着。'
+    ],
+    '讲理 · 讲情': [
+      '他们之间是"一个拆问题、一个收情绪"的组合 —— 顺序对上了就顺，对不上就会卡一下。',
+      '主导权看事情的性质：讲流程时一个人说了算，讲感受时另一个说了算。',
+      '看头在"次序"：同一件事他们从两个完全不同的入口进去，这种错位本身就是看点。'
+    ],
+    '排期 · 即兴': [
+      '这两人一个想把行程排死，一个坚持留白 —— 最后常常是排好的计划被临场改一点点，反而更顺。',
+      '主导权是拉锯的：一个负责框住大方向，另一个负责在框里自由发挥。',
+      '看头在"弹性"：计划不会僵，即兴也不会乱，最终呈现的东西往往比原计划有意思。'
+    ],
+    '平行型': [
+      '他们各自成段 —— 不刻意对齐，也不互相消耗，抬头聊两句也接得上。',
+      '主导权是分开的：各管各的一段，谁都不去改对方的节奏。',
+      '看头在"自在"：你不用替他们操心合不合，看着就是两个人都松弛。'
+    ]
   };
-  /* ---- 5) 你会被什么勾住 ---- */
+  /* ---- 4) 你会被什么勾住 ---- */
   const ATTRACT = {
     '咬合型':    '你会被勾住的大概是那种严丝合缝 —— 你像在看一件已经完成的作品。',
     '供能型':    '你会被勾住的是那种看得见的照顾 —— 谁在付出、谁在被接住，一眼就看得出来。',
@@ -2921,7 +3002,7 @@ function cpTension(ax){
     '排期 · 即兴':'你会被勾住的是那种弹性 —— 计划不会僵，即兴也不会乱。',
     '平行型':    '你会被勾住的是那种互不打扰的自在 —— 不用替他们操心合不合。'
   };
-  const lines = base.concat([pull, SCENE[type]]);
+  const lines = base.concat(BODY[type]);
   return {type:type, name:type, sub:CP_TENSION_SUB[type], lines:lines, attract:ATTRACT[type], eAB:e};
 }
 
@@ -3001,8 +3082,16 @@ function renderCp(u){
   if (!ax) return '<div class="result-card"><p>暂无可匹配的 CP。</p></div>';
   const q  = cpQuad(ax.res, ax.comp);
   const tp = cpPairTemps(u, ax);
-  const cf = cpConflict(u, pair, ax);
+  const cf = cpConflict(u, pair, ax, tp);
   const dy = cpDaily(u, pair);
+
+  /* 你和这一对：你磕的时候的状态与感受 */
+  const fl2 = cpQuadFeel(ax.res, ax.comp);
+  const feelRow = (ico, key, text) =>
+      '<div class="cp-feel-row">' +
+        '<span class="cp-feel-ico">' + ico + '</span>' +
+        '<p><b>' + key + '</b>：' + text + '</p>' +
+      '</div>';
 
   /* 这一对之间的关系张力 */
   const tn = cpTension(ax);
@@ -3030,6 +3119,7 @@ function renderCp(u){
 
   const scene = cf.lines.map(l =>
       '<p><span class="who">' + l.who + '：</span>' + l.text + '</p>').join('');
+  const trigList = cf.triggers.map(t => '<p class="cp-trigger">· ' + t + '</p>').join('');
 
   return '' +
     '<div class="result-card">' +
@@ -3047,8 +3137,16 @@ function renderCp(u){
         '<span class="cp-quad-tag" style="background:' + q.color + '">' + q.name + '</span>' +
         '<div class="cp-quad-sub">' + q.sub + '</div>' +
         '<p>' + q.text + '</p>' +
-        '<p class="cp-quad-why">🔍 为什么落在这一格：' + cpQuadWhy(ax.res, ax.comp) + '</p>' +
         '<p class="ts-tip">📌 ' + q.tip + '</p>' +
+      '</div>' +
+      '<div class="cp-block">' +
+        '<div class="cp-block-title">你和这一对 · 磕的时候你是什么状态</div>' +
+        '<div class="cp-feel">' +
+          feelRow('🛋', '你的状态', fl2.state) +
+          feelRow('💭', '你的感受', fl2.feel) +
+          feelRow('💫', '为什么被吸引', fl2.attract) +
+          feelRow('🙄', '什么时候会想翻白眼', fl2.annoy) +
+        '</div>' +
       '</div>' +
       '<div class="cp-block">' +
         '<div class="cp-block-title">这一对之间的关系张力 · 什么在吸引你</div>' +
@@ -3060,8 +3158,15 @@ function renderCp(u){
       '<div class="cp-block">' +
         '<div class="cp-block-title">最可能因为什么吵</div>' +
         '<div class="cp-scene">' +
-          '<div class="cp-scene-topic">「' + cf.topic + '」</div>' + scene +
+          '<div class="cp-scene-topic">「' + cf.topic + '」</div>' +
+          '<div class="cp-scene-sub">最容易在什么情况下点着</div>' +
+          trigList +
+          '<div class="cp-scene-sub" style="margin-top:10px;">点着之后各自的反应</div>' +
+          scene +
         '</div>' +
+        '<div class="cp-task">🔥 升温节奏：' + cf.heat + '</div>' +
+        '<div class="cp-task">🌙 吵完之后：' + cf.after + '</div>' +
+        '<div class="cp-task">🔑 破局：' + cf.end + '</div>' +
         '<div class="cp-task">🕊 和好任务：' + cf.task + '</div>' +
       '</div>' +
       '<div class="cp-block">' +
